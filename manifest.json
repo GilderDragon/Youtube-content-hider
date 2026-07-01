@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Content Blocker",
+  "version": "1.0",
+  "description": "Скрывает видео с определёнными ключевыми словами",
+  "permissions": [],
+  "host_permissions": [
+    "*://*.youtube.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "128": "icon.png"
+  }
+}
+
