@@ -1,28 +1,47 @@
-const BLOCKED_KEYWORDS = ['gta6', 'gta 6', 'gtavi', 'gta vi'];
+const BLOCKED_KEYWORDS = ['gta6', 'gta 6', 'gtavi', 'gta vi', 'grand theft auto vi'];
 
 function containsBlockedKeywords(text) {
+	if (!text) return false;
+
 	const lower = text.toLowerCase();
 	return BLOCKED_KEYWORDS.some(keyword => lower.includes(keyword));
 }
 
 function hideVideos() {
-	const selectors = [
-		'ytd-rich-item-renderer',
-		'ytd-video-renderer',
-		'ytd-compact-videor-renderer'
-	];
+  const videoCards = document.querySelectorAll([
+    'ytd-rich-item-renderer',
+    'ytd-video-renderer',
+    'ytd-compact-video-renderer',
+    'ytd-reel-video-renderer',
+    'ytd-grid-video-renderer',
+    'ytd-watch-card-compact-video-renderer',
+    'ytd-universal-watch-card-renderer',
+    'ytd-search-pyv-renderer',
+    'ytm-shorts-lockup-view-model',
+    '[class*="shortsLockupViewModel"]',
+    'ytd-video-preview-container'
+  ].join(','));
 
-	selectors.forEach(selector => {
-		document.querySelectorAll(selector).forEach(item => {
-			const titleElement = item.querySelector('#video-title, #title, .title');
-			if (!titleElement) return;
+  videoCards.forEach(card => {
+    if (card.style.display === 'none') return;
 
-			const titleText = titleElement.textContent.trim();
-			if (containsBlockedKeywords(titleText)) {
-				item.style.display = 'none';
-			}
-		})
-	})
+    const visibleText = card.textContent ? card.textContent.trim() : '';
+    
+    let extraText = '';
+    card.querySelectorAll('a, img, span, h2, h3, h4').forEach(innerNode => {
+      extraText += ' ' + (innerNode.getAttribute('title') || '');
+      extraText += ' ' + (innerNode.getAttribute('aria-label') || '');
+      extraText += ' ' + (innerNode.getAttribute('href') || '');
+    });
+
+    const fullCardText = (visibleText + ' ' + extraText).toLowerCase();
+
+    const hasBlockedWord = BLOCKED_KEYWORDS.some(keyword => fullCardText.includes(keyword.toLowerCase()));
+
+    if (hasBlockedWord) {
+      card.style.setProperty('display', 'none', 'important');
+    }
+  });
 }
 
 hideVideos();
