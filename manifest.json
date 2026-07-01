@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "YouTube Content Blocker",
   "version": "1.0",
-  "description": "Скрывает видео с определёнными ключевыми словами",
+  "description": "Replaces clickbait previews and blocks spoilers by keywords",
   "permissions": [],
   "host_permissions": [
     "*://*.youtube.com/*"
@@ -10,12 +10,17 @@
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],
-      "js": ["content.js"],
-      "run_at": "document_idle"
+      "js": ["src/content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["resources/blocked.png"],
+      "matches": ["*://*.youtube.com/*"]
     }
   ],
   "icons": {
-    "128": "icon.png"
+    "128": "resources/icon.png"
   }
 }
-
