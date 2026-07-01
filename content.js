@@ -1,14 +1,6 @@
 const BLOCKED_KEYWORDS = ['gta6', 'gta 6', 'gtavi', 'gta vi', 'grand theft auto vi'];
 
-function containsBlockedKeywords(text) {
-	if (!text) return false;
-
-	const lower = text.toLowerCase();
-	return BLOCKED_KEYWORDS.some(keyword => lower.includes(keyword));
-}
-
-function hideVideos() {
-  const videoCards = document.querySelectorAll([
+const TAGS = [
     'ytd-rich-item-renderer',
     'ytd-video-renderer',
     'ytd-compact-video-renderer',
@@ -20,7 +12,17 @@ function hideVideos() {
     'ytm-shorts-lockup-view-model',
     '[class*="shortsLockupViewModel"]',
     'ytd-video-preview-container'
-  ].join(','));
+];
+
+function containsBlockedKeywords(text) {
+	if (!text) return false;
+
+	const lower = text.toLowerCase();
+	return BLOCKED_KEYWORDS.some(keyword => lower.includes(keyword));
+}
+
+function hideVideos() {
+  const videoCards = document.querySelectorAll(TAGS.join(','));
 
   videoCards.forEach(card => {
     if (card.style.display === 'none') return;
@@ -34,11 +36,7 @@ function hideVideos() {
       extraText += ' ' + (innerNode.getAttribute('href') || '');
     });
 
-    const fullCardText = (visibleText + ' ' + extraText).toLowerCase();
-
-    const hasBlockedWord = BLOCKED_KEYWORDS.some(keyword => fullCardText.includes(keyword.toLowerCase()));
-
-    if (hasBlockedWord) {
+    if (containsBlockedKeywords(visibleText + extraText)) {
       card.style.setProperty('display', 'none', 'important');
     }
   });
