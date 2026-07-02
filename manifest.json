@@ -3,10 +3,13 @@
   "name": "YouTube Content Blocker",
   "version": "1.0",
   "description": "Replaces clickbait previews and blocks spoilers by keywords",
-  "permissions": [],
+  "permissions": ["storage"],
   "host_permissions": [
     "*://*.youtube.com/*"
   ],
+  "action": {
+	  "default_popup": "src/popup.html"
+  },
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],

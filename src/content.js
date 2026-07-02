@@ -2,8 +2,6 @@ const DELAY = 250;
 
 const REPLACEMENT_IMAGE_URL = chrome.runtime.getURL('resources/blocked.png'); 
 
-const BLOCKED_KEYWORDS = ['gta6', 'gta 6', 'gtavi', 'gta vi', 'grand theft auto vi'];
-
 const TAGS = [
     'ytd-rich-item-renderer',
     'ytd-video-renderer',
@@ -18,6 +16,18 @@ const TAGS = [
     'ytd-video-preview-container',
 	'ytd-video-preview'
 ];
+
+const AVATAR_TAGS = [
+	'#avatar',
+	'.avatar',
+	'[class*="avatar" i]',
+	'yt-img-shadow.ytd-channel-name',
+	'#channel-thumbnail',
+	'[class*="channel-thumbnail" i]',
+	'[class*="author" i]'
+];
+
+let blockedKeywords = [];
 
 const style = document.createElement('style');
 style.textContent = `
@@ -39,7 +49,7 @@ style.textContent = `
 function containsBlockedKeywords(text) {
 	if (!text) return false;
 	const lower = text.toLowerCase();
-	return BLOCKED_KEYWORDS.some(keyword => lower.includes(keyword));
+	return blockedKeywords.some(keyword => lower.includes(keyword));
 }
 
 function hideVideos() {
@@ -64,7 +74,7 @@ function hideVideos() {
       card.classList.add('yt-blocked-done');
 
       card.querySelectorAll('img').forEach(img => {
-        if (!img.closest('#avatar, .avatar, [class*="avatar" i]')) {
+        if (!img.closest(AVATAR_TAGS.join(','))) {
           img.src = REPLACEMENT_IMAGE_URL;
           img.srcset = REPLACEMENT_IMAGE_URL; 
         }
@@ -92,12 +102,28 @@ function processMutationsWithDebounce() {
 	}, DELAY);
 }
 
-hideVideos();
+chrome.storage.local.get({ blockedKeywords: [] }, (data) => {
+	blockedKeywords = data.blockedKeywords;
 
-const observer = new MutationObserver(processMutationsWithDebounce);
+	hideVideos();
 
-observer.observe(document.documentElement, {
-	childList: true,
-	subtree: true
+	const observer = new MutationObserver(processMutationsWithDebounce);
+	observer.observe(document.documentElement, {
+		childList: true,
+		subtree: true
+	});
+});
+
+chrome.storage.onChanged.addListener((changes, areaName) => {
+	if (areaName === 'local' && changes.blockedKeywords) {
+		blockedKeywords = changes.blockedKeywords.newValue || [];
+
+		document.querySelectorAll('.yt-verified-card').forEach(card => {
+			card.classList.remove('yt-verified-card');
+			card.classList.remove('yt-blocked-done');
+		});
+
+		hideVideos();
+	}
 });
 
