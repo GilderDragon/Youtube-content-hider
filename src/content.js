@@ -1,127 +1,125 @@
-const DELAY = 250;
-
-const REPLACEMENT_IMAGE_URL = chrome.runtime.getURL('resources/blocked.png'); 
-
-const TAGS = [
-    'ytd-rich-item-renderer',
-    'ytd-video-renderer',
-    'ytd-compact-video-renderer',
-    'ytd-reel-video-renderer',
-    'ytd-grid-video-renderer',
-    'ytd-watch-card-compact-video-renderer',
-    'ytd-universal-watch-card-renderer',
-    'ytd-search-pyv-renderer',
-    'ytm-shorts-lockup-view-model',
-    '[class*="shortsLockupViewModel"]',
-    'ytd-video-preview-container',
-	'ytd-video-preview'
-];
-
-const AVATAR_TAGS = [
-	'#avatar',
-	'.avatar',
-	'[class*="avatar" i]',
-	'yt-img-shadow.ytd-channel-name',
-	'#channel-thumbnail',
-	'[class*="channel-thumbnail" i]',
-	'[class*="author" i]'
-];
-
 let blockedKeywords = [];
 
 const style = document.createElement('style');
 style.textContent = `
-  ${TAGS.join(', ')} { visibility: hidden !important; }
-  .yt-verified-card { visibility: visible !important; }
+    ${TAGS.join(', ')} { visibility: hidden !important; }
+    [data-verified="true"] { visibility: visible !important; }
 
-  .yt-blocked-done ytd-video-preview,
-  .yt-blocked-done [id*="preview"],
-  .yt-blocked-done video {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    max-height: 0px !important;
-    pointer-events: none !important;
-  }
+    [data-blocked="true"] ytd-video-preview,
+    [data-blocked="true"] [id*="preview"],
+    [data-blocked="true"] video,
+    .html5-video-player[data-blocked="true"] {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        max-height: 0px !important;
+        pointer-events: none !important;
+    }
 `;
 (document.head || document.documentElement).appendChild(style);
 
 function containsBlockedKeywords(text) {
-	if (!text) return false;
-	const lower = text.toLowerCase();
-	return blockedKeywords.some(keyword => lower.includes(keyword));
+    if (!text || blockedKeywords.length === 0) return null;
+    const lower = text.toLowerCase();
+    return blockedKeywords.find(keyword => lower.includes(keyword)) || null;
 }
 
 function hideVideos() {
-  const videoCards = document.querySelectorAll(TAGS.join(','));
+    const videoCards = document.querySelectorAll(TAGS.join(','));
 
-  videoCards.forEach(card => {
-    if (card.classList.contains('yt-blocked-done')) {
-		card.querySelectorAll('ytd-video-preview, [id*="preview"], video').forEach(preview => preview.remove());
-		return;
-	}
+    videoCards.forEach(card => {
+        if (card.getAttribute('data-blocked') === 'true') {
+            card.querySelectorAll('ytd-video-preview, [id*="preview"], video').forEach(preview => preview.remove());
+            return;
+        }
 
-    const visibleText = card.textContent ? card.textContent.trim() : '';
-    
-    let extraText = '';
-    card.querySelectorAll('a, img, span, h2, h3, h4').forEach(innerNode => {
-      extraText += ' ' + (innerNode.getAttribute('title') || '');
-      extraText += ' ' + (innerNode.getAttribute('aria-label') || '');
-      extraText += ' ' + (innerNode.getAttribute('href') || '');
+        const visibleText = card.textContent ? card.textContent.trim() : '';
+        
+        let extraText = '';
+        card.querySelectorAll('a, img, span, h2, h3, h4').forEach(innerNode => {
+            extraText += ' ' + (innerNode.getAttribute('title') || '');
+            extraText += ' ' + (innerNode.getAttribute('aria-label') || '');
+            extraText += ' ' + (innerNode.getAttribute('href') || '');
+        });
+
+        const matchedKeyword = containsBlockedKeywords(visibleText + extraText);
+
+        if (matchedKeyword) {
+            card.setAttribute('data-blocked', 'true');
+
+            const generatedImgUrl = generateBlockedImage(matchedKeyword);
+
+            card.querySelectorAll('img').forEach(img => {
+                if (!img.closest(AVATAR_TAGS.join(','))) {
+                    img.src = generatedImgUrl;
+                    img.srcset = generatedImgUrl;
+                }
+            });
+
+            card.querySelectorAll('ytd-video-preview, [id*="preview"], video').forEach(preview => preview.remove());
+		}
+        card.setAttribute('data-verified', 'true');
     });
 
-    if (containsBlockedKeywords(visibleText + extraText)) {
-      card.classList.add('yt-blocked-done');
+    document.querySelectorAll('ytd-video-preview, .html5-video-player').forEach(preview => {
+        if (preview.getAttribute('data-blocked') === 'true') return;
 
-      card.querySelectorAll('img').forEach(img => {
-        if (!img.closest(AVATAR_TAGS.join(','))) {
-          img.src = REPLACEMENT_IMAGE_URL;
-          img.srcset = REPLACEMENT_IMAGE_URL; 
+        const visibleText = preview.textContent ? preview.textContent.trim() : '';
+        let extraText = '';
+        preview.querySelectorAll('a, span').forEach(innerNode => {
+            extraText += ' ' + (innerNode.getAttribute('href') || '') + ' ' + innerNode.textContent;
+        });
+
+        const matchedKeyword = containsBlockedKeywords(visibleText + extraText);
+
+        if (matchedKeyword) {
+            preview.setAttribute('data-blocked', 'true');
+            preview.querySelectorAll('video').forEach(v => v.remove());
+        } else {
+            preview.removeAttribute('data-blocked');
+            preview.style.removeProperty('display');
+            preview.style.removeProperty('visibility');
         }
-      });
-
-		card.querySelectorAll('ytd-video-preview, [id*="preview"]').forEach(preview => preview.remove());
-    }
-
-    card.classList.add('yt-verified-card');
-  });
+    });
 }
 
 let isWaiting = false;
 let timeoutId;
 
 function processMutationsWithDebounce() {
-	if (isWaiting) return;
+    if (isWaiting) return;
 
-	isWaiting = true;
-	clearTimeout(timeoutId);
+    isWaiting = true;
+    clearTimeout(timeoutId);
 
-	timeoutId = setTimeout(() => {
-		hideVideos();
-		isWaiting = false;
-	}, DELAY);
+    timeoutId = setTimeout(() => {
+        hideVideos();
+        isWaiting = false;
+    }, DELAY);
 }
 
 chrome.storage.local.get({ blockedKeywords: [] }, (data) => {
-	blockedKeywords = data.blockedKeywords;
+    blockedKeywords = data.blockedKeywords;
 
-	hideVideos();
+    hideVideos();
 
-	const observer = new MutationObserver(processMutationsWithDebounce);
-	observer.observe(document.documentElement, {
-		childList: true,
-		subtree: true
-	});
+    const observer = new MutationObserver(processMutationsWithDebounce);
+    observer.observe(document.documentElement, {
+        childList: true,
+        subtree: true
+    });
 });
 
 chrome.storage.onChanged.addListener((changes, areaName) => {
-	if (areaName === 'local' && changes.blockedKeywords) {
-		blockedKeywords = changes.blockedKeywords.newValue || [];
+    if (areaName === 'local' && changes.blockedKeywords) {
+        blockedKeywords = changes.blockedKeywords.newValue || [];
 
-		document.querySelectorAll('.yt-verified-card').forEach(card => {
-			card.classList.remove('yt-verified-card');
-			card.classList.remove('yt-blocked-done');
-		});
+        document.querySelectorAll('[data-verified], [data-blocked]').forEach(card => {
+            card.removeAttribute('data-verified');
+            card.removeAttribute('data-blocked');
+            card.style.removeProperty('display');
+            card.style.removeProperty('visibility');
+        });
 
 		hideVideos();
 	}

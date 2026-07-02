@@ -13,14 +13,12 @@
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],
-      "js": ["src/content.js"],
+      "js": [
+		  "src/canvas-utils.js",
+		  "src/config.js",
+		  "src/content.js"
+	  ],
       "run_at": "document_start"
-    }
-  ],
-  "web_accessible_resources": [
-    {
-      "resources": ["resources/blocked.png"],
-      "matches": ["*://*.youtube.com/*"]
     }
   ],
   "icons": {
