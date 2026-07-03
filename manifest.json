@@ -17,7 +17,12 @@
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],
-      "js": ["src/content.js"],
+      "js": [
+		  "src/config.js",
+		  "src/canvas-generator.js",
+		  "src/dom-filter.js",
+		  "src/content.js"
+	  ],
       "run_at": "document_start"
     }
   ]
