@@ -6,7 +6,8 @@ const CONFIG = {
     'ytd-search-pyv-renderer', 'ytm-shorts-lockup-view-model',
     '[class*="shortsLockupViewModel"]', 'ytd-video-preview-container',
     'ytd-playlist-renderer', 'ytd-movie-renderer', 'ytd-rich-grid-row'
-  ]
+  ],
+  DELAY: 100
 };
 
 const style = document.createElement('style');

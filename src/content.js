@@ -6,7 +6,7 @@ function throttledHideVideos() {
   throttleTimeout = setTimeout(() => {
     hideVideos();
     throttleTimeout = null;
-  }, 100);
+  }, CONFIG.DELAY);
 }
 
 function initObserver() {
