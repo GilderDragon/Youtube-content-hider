@@ -10,6 +10,12 @@ function containsBlockedKeywords(text) {
 function blockCard(card, keyword) {
   if (card.hasAttribute('data-blocked')) return;
 
+  if (card.closest('ytd-shorts') || card.closest('#shorts-container') || card.closest('#contentContainer')) {
+    if (card.tagName.toLowerCase() === 'ytd-reel-video-renderer' && card.closest('ytd-shorts')) {
+      return;
+    }
+  }
+
   const isShorts = card.tagName.toLowerCase() === 'ytd-reel-video-renderer' ||
 		card.tagName.toLowerCase() === 'ytm-shorts-lockup-view-model' ||
 		card.className.includes('shortsLockupViewModel') ||

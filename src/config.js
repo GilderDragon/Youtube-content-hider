@@ -46,6 +46,14 @@ style.textContent = `
     transform: none !important;
     overflow: hidden !important;
   }
+
+  ytd-shorts .yth-preview-overlay,
+  ytd-shorts .yth-shorts-overlay,
+  #shorts-container .yth-preview-overlay {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
 `;
 (document.head || document.documentElement).appendChild(style);
 
