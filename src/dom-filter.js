@@ -9,15 +9,27 @@ function containsBlockedKeywords(text) {
 
 function blockCard(card, keyword) {
   if (card.hasAttribute('data-blocked')) return;
+
+  const isShorts = card.tagName.toLowerCase() === 'ytd-reel-video-renderer' ||
+		card.tagName.toLowerCase() === 'ytm-shorts-lockup-view-model' ||
+		card.className.includes('shortsLockupViewModel') ||
+		card.querySelector('ytd-reel-video-renderer, ytm-shorts-lockup-view-model, [class*="shortsLockupViewModel"]') !== null;
+
+  if (card.querySelector('[data-blocked]') || card.closest('[data-blocked]')) return;
+
   card.setAttribute('data-blocked', 'true');
   card.classList.add('yth-blocked-card');
 
-  const imgUrl = generateBlockedImage(keyword);
-  
   const overlay = document.createElement('div');
-  overlay.className = 'yth-preview-overlay';
-  overlay.style.backgroundImage = `url(${imgUrl})`;
 
+  if (isShorts) {
+    overlay.className = 'yth-preview-overlay yth-shorts-overlay';
+    overlay.style.backgroundImage = `url(${generateBlockedShortsImage(keyword)})`;
+  } else {
+    overlay.className = 'yth-preview-overlay';
+    overlay.style.backgroundImage = `url(${generateBlockedImage(keyword)})`;
+  }
+  
   card.appendChild(overlay);
 }
 
