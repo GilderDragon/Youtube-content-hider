@@ -9,10 +9,14 @@
   ],
   "action": {
     "default_popup": "src/popup.html",
-    "default_icon": "resources/icon.png"
+	"default_icon": {
+		"16": "resources/icon_16.png"
+	}
   },
   "icons": {
-    "128": "resources/icon.png"
+	"16": "resources/icon_16.png",
+	"48": "resources/icon_48.png",
+    "128": "resources/icon_128.png"
   },
   "content_scripts": [
     {
