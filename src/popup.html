@@ -3,99 +3,195 @@
 <head>
   <meta charset="UTF-8">
   <style>
+    :root {
+      --bg-dark: #0f0f12;
+      --bg-card: #1a1a22;
+      --bg-input: #252530;
+      --accent-blue: #3ea6ff;
+      --accent-red: #ff2a5f;
+      --text-main: #f1f1f6;
+      --text-muted: #8a8a9e;
+      --border: #2d2d3d;
+    }
+
     body {
-      width: 320px;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #0f0f0f;
-      color: #f1f1f1;
+      width: 350px;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
       margin: 0;
-      padding: 15px;
+      padding: 20px;
+      box-sizing: border-box;
     }
-    h3 {
-      margin-top: 0;
-      margin-bottom: 12px;
-      font-size: 16px;
+
+    .header-area {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      background: linear-gradient(90deg, #fff, var(--text-muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .icon-shield { font-size: 20px; }
+
+    .toggle-btn {
+      display: block;
+      width: 100%;
+      height: 45px;
+      box-sizing: border-box;
+      padding: 0 12px;
+      margin-bottom: 16px;
+      font-size: 14px;
       font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: center;
+      line-height: 43px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
+
     .input-group {
       display: flex;
       gap: 8px;
-      margin-bottom: 15px;
+      margin-bottom: 4px;
     }
+
     input {
       flex: 1;
-      background-color: #212121;
-      border: 1px solid #3d3d3d;
-      border-radius: 4px;
+      background-color: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
       color: #fff;
-      padding: 8px 12px;
+      padding: 12px 14px;
       font-size: 14px;
       outline: none;
     }
-    input:focus {
-      border-color: #3ea6ff;
-    }
-    button {
-      background-color: #3ea6ff;
-      color: #0f0f0f;
+
+    input:focus { border-color: var(--accent-blue); }
+
+    .btn-add {
+      background-color: var(--accent-blue);
+      color: #000;
       border: none;
-      border-radius: 4px;
-      padding: 8px 14px;
+      border-radius: 10px;
+      padding: 0 16px;
       font-size: 14px;
-      font-weight: bold;
+      font-weight: 600;
       cursor: pointer;
     }
-    button:hover {
-      background-color: #65b8ff;
+
+    .error-toast {
+      height: 18px;
+      font-size: 12px;
+      color: var(--accent-red);
+      margin-bottom: 8px;
+      padding-left: 4px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
     }
+    .error-toast.show { opacity: 1; }
+
+    .btn-clear {
+      width: 100%;
+      height: 38px;
+      background-color: transparent;
+      border: 1px solid #3d2429;
+      color: var(--accent-red);
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+      transition: all 0.2s;
+    }
+    .btn-clear:hover {
+      background-color: rgba(255, 42, 95, 0.1);
+      border-color: var(--accent-red);
+    }
+
     .keyword-list {
-      max-height: 180px;
+      max-height: 200px;
       overflow-y: auto;
-      border: 1px solid #2d2d2d;
-      border-radius: 4px;
-      padding: 5px;
-      background-color: #1a1a1a;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 6px;
+      background-color: #13131a;
     }
+
+    .keyword-list::-webkit-scrollbar { width: 6px; }
+    .keyword-list::-webkit-scrollbar-track { background: transparent; }
+    .keyword-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
     .keyword-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 6px 10px;
-      background-color: #272727;
-      border-radius: 4px;
-      margin-bottom: 5px;
-      font-size: 13px;
-    }
-    .keyword-item:last-child {
-      margin-bottom: 0;
-    }
-    .delete-btn {
-      background: none;
-      color: #ff4d4d;
-      border: none;
-      cursor: pointer;
-      padding: 0 4px;
+      padding: 10px 14px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 6px;
       font-size: 14px;
     }
-    .delete-btn:hover {
-      color: #ff8080;
+
+    .delete-btn {
+      background: none;
+      color: var(--text-muted);
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
     }
+    .delete-btn:hover { color: var(--accent-red); }
+
     .empty-msg {
       text-align: center;
-      color: #aaa;
+      color: var(--text-muted);
+      padding: 30px 10px;
       font-size: 13px;
-      padding: 15px 0;
+    }
+
+    .footer {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
     }
   </style>
 </head>
 <body>
-  <h3>Blocking by keywords</h3>
+
+  <div class="header-area">
+    <span class="icon-shield">🛡️</span>
+    <h2>YT CONTENT HIDER</h2>
+  </div>
+  
+  <button id="toggle-btn" class="toggle-btn">Disable Extension</button>
+  
   <div class="input-group">
-    <input type="text" id="keyword-input" placeholder="Enter keyword..." autocomplete="off">
-    <button id="add-btn">Add</button>
+    <input type="text" id="keyword-input" placeholder="Keyword or phrase..." autocomplete="off">
+    <button id="add-btn" class="btn-add">Add</button>
   </div>
-  <div class="keyword-list" id="keyword-list">
-  </div>
+
+  <div id="error-message" class="error-toast">Already in the list!</div>
+
+  <button id="clear-btn" class="btn-clear">Clear All Keywords</button>
+
+  <div class="keyword-list" id="keyword-list"></div>
+
+  <div class="footer" id="version-footer">Blocks spoilers & clickbait</div>
+
   <script src="popup.js"></script>
 </body>
 </html>
