@@ -1,27 +1,30 @@
 {
   "manifest_version": 3,
-  "name": "YouTube Content Blocker",
+  "name": "YouTube Content Hider",
   "version": "1.0",
-  "description": "Replaces clickbait previews and blocks spoilers by keywords",
+  "description": "Hides clickbait and spoilers by keywords",
   "permissions": ["storage"],
   "host_permissions": [
     "*://*.youtube.com/*"
   ],
   "action": {
-	  "default_popup": "src/popup.html"
+    "default_popup": "src/popup.html",
+    "default_icon": "resources/icon.png"
+  },
+  "icons": {
+    "128": "resources/icon.png"
   },
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],
       "js": [
-		  "src/canvas-utils.js",
 		  "src/config.js",
+		  "src/canvas-generator.js",
+		  "src/dom-filter.js",
 		  "src/content.js"
 	  ],
       "run_at": "document_start"
     }
-  ],
-  "icons": {
-    "128": "resources/icon.png"
-  }
+  ]
 }
+

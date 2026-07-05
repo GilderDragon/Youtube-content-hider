@@ -1,127 +1,51 @@
-let blockedKeywords = [];
+let observer = null;
+let throttleTimeout = null;
 
-const style = document.createElement('style');
-style.textContent = `
-    ${TAGS.join(', ')} { visibility: hidden !important; }
-    [data-verified="true"] { visibility: visible !important; }
-
-    [data-blocked="true"] ytd-video-preview,
-    [data-blocked="true"] [id*="preview"],
-    [data-blocked="true"] video,
-    .html5-video-player[data-blocked="true"] {
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-        max-height: 0px !important;
-        pointer-events: none !important;
-    }
-`;
-(document.head || document.documentElement).appendChild(style);
-
-function containsBlockedKeywords(text) {
-    if (!text || blockedKeywords.length === 0) return null;
-    const lower = text.toLowerCase();
-    return blockedKeywords.find(keyword => lower.includes(keyword)) || null;
-}
-
-function hideVideos() {
-    const videoCards = document.querySelectorAll(TAGS.join(','));
-
-    videoCards.forEach(card => {
-        if (card.getAttribute('data-blocked') === 'true') {
-            card.querySelectorAll('ytd-video-preview, [id*="preview"], video').forEach(preview => preview.remove());
-            return;
-        }
-
-        const visibleText = card.textContent ? card.textContent.trim() : '';
-        
-        let extraText = '';
-        card.querySelectorAll('a, img, span, h2, h3, h4').forEach(innerNode => {
-            extraText += ' ' + (innerNode.getAttribute('title') || '');
-            extraText += ' ' + (innerNode.getAttribute('aria-label') || '');
-            extraText += ' ' + (innerNode.getAttribute('href') || '');
-        });
-
-        const matchedKeyword = containsBlockedKeywords(visibleText + extraText);
-
-        if (matchedKeyword) {
-            card.setAttribute('data-blocked', 'true');
-
-            const generatedImgUrl = generateBlockedImage(matchedKeyword);
-
-            card.querySelectorAll('img').forEach(img => {
-                if (!img.closest(AVATAR_TAGS.join(','))) {
-                    img.src = generatedImgUrl;
-                    img.srcset = generatedImgUrl;
-                }
-            });
-
-            card.querySelectorAll('ytd-video-preview, [id*="preview"], video').forEach(preview => preview.remove());
-		}
-        card.setAttribute('data-verified', 'true');
-    });
-
-    document.querySelectorAll('ytd-video-preview, .html5-video-player').forEach(preview => {
-        if (preview.getAttribute('data-blocked') === 'true') return;
-
-        const visibleText = preview.textContent ? preview.textContent.trim() : '';
-        let extraText = '';
-        preview.querySelectorAll('a, span').forEach(innerNode => {
-            extraText += ' ' + (innerNode.getAttribute('href') || '') + ' ' + innerNode.textContent;
-        });
-
-        const matchedKeyword = containsBlockedKeywords(visibleText + extraText);
-
-        if (matchedKeyword) {
-            preview.setAttribute('data-blocked', 'true');
-            preview.querySelectorAll('video').forEach(v => v.remove());
-        } else {
-            preview.removeAttribute('data-blocked');
-            preview.style.removeProperty('display');
-            preview.style.removeProperty('visibility');
-        }
-    });
-}
-
-let isWaiting = false;
-let timeoutId;
-
-function processMutationsWithDebounce() {
-    if (isWaiting) return;
-
-    isWaiting = true;
-    clearTimeout(timeoutId);
-
-    timeoutId = setTimeout(() => {
-        hideVideos();
-        isWaiting = false;
-    }, DELAY);
-}
-
-chrome.storage.local.get({ blockedKeywords: [] }, (data) => {
-    blockedKeywords = data.blockedKeywords;
-
+function throttledHideVideos() {
+  if (throttleTimeout) return;
+  throttleTimeout = setTimeout(() => {
     hideVideos();
+    throttleTimeout = null;
+  }, CONFIG.DELAY);
+}
 
-    const observer = new MutationObserver(processMutationsWithDebounce);
-    observer.observe(document.documentElement, {
-        childList: true,
-        subtree: true
-    });
+function initObserver() {
+  if (observer) observer.disconnect();
+  observer = new MutationObserver(throttledHideVideos);
+  observer.observe(document.documentElement, { childList: true, subtree: true });
+}
+
+chrome.storage.local.get({ blockedKeywords: [], isEnabled: true }, (data) => {
+  blockedKeywords = data.blockedKeywords || [];
+  isEnabled = data.isEnabled !== false;
+  if (isEnabled) {
+    hideVideos();
+    initObserver();
+  }
 });
 
-chrome.storage.onChanged.addListener((changes, areaName) => {
-    if (areaName === 'local' && changes.blockedKeywords) {
-        blockedKeywords = changes.blockedKeywords.newValue || [];
+chrome.storage.onChanged.addListener((changes) => {
+  if (changes.blockedKeywords) {
+    blockedKeywords = changes.blockedKeywords.newValue || [];
+    unblockAllCards();
+    hideVideos();
+  }
+  if (changes.isEnabled !== undefined) {
+    isEnabled = changes.isEnabled.newValue;
+    if (!isEnabled) {
+      if (observer) observer.disconnect();
+      unblockAllCards();
+    } else {
+      initObserver();
+      hideVideos();
+    }
+  }
+});
 
-        document.querySelectorAll('[data-verified], [data-blocked]').forEach(card => {
-            card.removeAttribute('data-verified');
-            card.removeAttribute('data-blocked');
-            card.style.removeProperty('display');
-            card.style.removeProperty('visibility');
-        });
-
-		hideVideos();
-	}
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.action === "refresh") {
+    unblockAllCards();
+    hideVideos();
+  }
 });
 
