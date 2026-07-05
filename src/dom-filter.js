@@ -8,26 +8,28 @@ function containsBlockedKeywords(text) {
 }
 
 function blockCard(card, keyword) {
-  if (card.hasAttribute('data-blocked')) return;
+  if (card.hasAttribute('data-blocked') || card.closest('[data-blocked]')) return;
 
-  if (card.closest('ytd-shorts') || card.closest('#shorts-container') || card.closest('#contentContainer')) {
-    if (card.tagName.toLowerCase() === 'ytd-reel-video-renderer' && card.closest('ytd-shorts')) {
-      return;
-    }
+  if (card.closest('ytd-shorts') || card.closest('#shorts-container') || window.location.pathname.startsWith('/shorts')) {
+    return;
   }
 
-  const isShorts = card.tagName.toLowerCase() === 'ytd-reel-video-renderer' ||
-		card.tagName.toLowerCase() === 'ytm-shorts-lockup-view-model' ||
-		card.className.includes('shortsLockupViewModel') ||
-		card.querySelector('ytd-reel-video-renderer, ytm-shorts-lockup-view-model, [class*="shortsLockupViewModel"]') !== null;
+  if (card.querySelector('.yth-preview-overlay, .yth-shorts-overlay')) {
+    card.setAttribute('data-blocked', 'true');
+    return;
+  }
 
-  if (card.querySelector('[data-blocked]') || card.closest('[data-blocked]')) return;
+  const isShorts = card.tagName.toLowerCase() === 'ytd-reel-video-renderer' || 
+                   card.tagName.toLowerCase() === 'ytm-shorts-lockup-view-model' ||
+                   card.tagName.toLowerCase() === 'ytm-shorts-lockup-view-model-v2' || 
+                   card.className.includes('shortsLockupViewModel') ||
+                   card.querySelector('ytd-reel-video-renderer, [class*="shortsLockupViewModel"]') !== null;
 
   card.setAttribute('data-blocked', 'true');
   card.classList.add('yth-blocked-card');
 
   const overlay = document.createElement('div');
-
+  
   if (isShorts) {
     overlay.className = 'yth-preview-overlay yth-shorts-overlay';
     overlay.style.backgroundImage = `url(${generateBlockedShortsImage(keyword)})`;

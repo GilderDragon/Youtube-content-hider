@@ -1,11 +1,11 @@
 const CONFIG = {
   TAGS: [
-    'ytd-rich-item-renderer', 'ytd-video-renderer', 'ytd-compact-video-renderer',
+	'ytd-rich-item-renderer', 'ytd-video-renderer', 'ytd-compact-video-renderer',
     'ytd-reel-video-renderer', 'ytd-grid-video-renderer',
     'ytd-watch-card-compact-video-renderer', 'ytd-universal-watch-card-renderer',
-    'ytd-search-pyv-renderer', 'ytm-shorts-lockup-view-model',
-    '[class*="shortsLockupViewModel"]', 'ytd-video-preview-container',
-    'ytd-playlist-renderer', 'ytd-movie-renderer', 'ytd-rich-grid-row'
+    'ytd-search-pyv-renderer', 'ytm-shorts-lockup-view-model-v2', 
+    'ytd-video-preview-container', 'ytd-playlist-renderer', 
+    'ytd-movie-renderer', 'ytd-rich-grid-row'
   ],
   DELAY: 100
 };
@@ -36,23 +36,23 @@ style.textContent = `
     left: 0 !important;
     width: 100% !important;
     
-    height: 80% !important; 
+    height: auto !important;
+    aspect-ratio: 2 / 3 !important; 
     
-    aspect-ratio: auto !important; 
-    border-radius: 16px !important;
+    border-radius: 12px !important;
     background-size: 100% 100% !important; 
     background-position: center !important;
-    z-index: 99 !important;
+    z-index: 10 !important;
     transform: none !important;
-    overflow: hidden !important;
+    pointer-events: none !important;
   }
 
-  ytd-shorts .yth-preview-overlay,
+  .yth-shorts-overlay .yth-shorts-overlay,
+  .yth-shorts-overlay .yth-preview-overlay,
   ytd-shorts .yth-shorts-overlay,
-  #shorts-container .yth-preview-overlay {
+  #shorts-container .yth-shorts-overlay {
     display: none !important;
     opacity: 0 !important;
-    pointer-events: none !important;
   }
 `;
 (document.head || document.documentElement).appendChild(style);
