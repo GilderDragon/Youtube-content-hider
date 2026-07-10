@@ -8,6 +8,8 @@ function containsBlockedKeywords(text) {
 }
 
 function blockCard(card, keyword) {
+  if (card.hasAttribute('data-blocked') || card.closest('[data-blocked]')) return;
+
   if (card.closest('ytd-shorts') || card.closest('#shorts-container') || window.location.pathname.startsWith('/shorts')) {
     return;
   }
@@ -65,7 +67,10 @@ function unblockAllCards() {
   document.querySelectorAll('[data-blocked]').forEach(card => {
     card.removeAttribute('data-blocked');
     card.classList.remove('yth-blocked-card');
-    card.querySelectorAll('.yth-preview-overlay').forEach(el => el.remove());
+	if (card.style.position === 'relative') card.style.removeProperty('position');
+    if (card.style.overflow === 'hidden') card.style.removeProperty('overflow');
+    if (card.style.display === 'block') card.style.removeProperty('display');
+    card.querySelectorAll('.yth-preview-overlay, .yth-shorts-overlay, .yth-sidebar-overlay').forEach(el => el.remove());
   });
 }
 
