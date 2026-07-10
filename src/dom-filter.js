@@ -24,7 +24,7 @@ function blockCard(card, keyword) {
 
   const isSidebar = tagName === 'ytd-compact-video-renderer' || 
                     tagName === 'yt-lockup-view-model' || 
-                    card.closest('#items.ytd-watch-next-secondary-results-renderer');
+                    !!card.closest('#items.ytd-watch-next-secondary-results-renderer');
 
   let targetContainer = card;
   if (isSidebar) {
@@ -51,9 +51,9 @@ function blockCard(card, keyword) {
     overlay.className = 'yth-preview-overlay yth-sidebar-overlay';
     overlay.style.backgroundImage = `url(${generateBlockedImage(keyword)})`;
     
-    if (targetContainer.style.position) targetContainer.dataset.origPosition = targetContainer.style.position;
-    if (targetContainer.style.overflow) targetContainer.dataset.origOverflow = targetContainer.style.overflow;
-    if (targetContainer.style.display) targetContainer.dataset.origDisplay = targetContainer.style.display;
+    targetContainer.dataset.origPosition = targetContainer.style.position;
+    targetContainer.dataset.origOverflow = targetContainer.style.overflow;
+    targetContainer.dataset.origDisplay = targetContainer.style.display;
     
     targetContainer.style.setProperty('position', 'relative', 'important');
     targetContainer.style.setProperty('overflow', 'hidden', 'important');
@@ -73,24 +73,30 @@ function unblockAllCards() {
     card.classList.remove('yth-blocked-card');
 
     if (card.dataset.origPosition !== undefined) {
-      card.style.position = card.dataset.origPosition;
+      if (card.dataset.origPosition === "") {
+        card.style.removeProperty('position');
+      } else {
+        card.style.position = card.dataset.origPosition;
+      }
       delete card.dataset.origPosition;
-    } else {
-      card.style.removeProperty('position');
     }
 
     if (card.dataset.origOverflow !== undefined) {
-      card.style.overflow = card.dataset.origOverflow;
+      if (card.dataset.origOverflow === "") {
+        card.style.removeProperty('overflow');
+      } else {
+        card.style.overflow = card.dataset.origOverflow;
+      }
       delete card.dataset.origOverflow;
-    } else {
-      card.style.removeProperty('overflow');
     }
 
     if (card.dataset.origDisplay !== undefined) {
-      card.style.display = card.dataset.origDisplay;
+      if (card.dataset.origDisplay === "") {
+        card.style.removeProperty('display');
+      } else {
+        card.style.display = card.dataset.origDisplay;
+      }
       delete card.dataset.origDisplay;
-    } else {
-      card.style.removeProperty('display');
     }
 
     card.querySelectorAll('.yth-preview-overlay, .yth-shorts-overlay, .yth-sidebar-overlay').forEach(el => el.remove());
