@@ -8,37 +8,57 @@ function containsBlockedKeywords(text) {
 }
 
 function blockCard(card, keyword) {
-  if (card.hasAttribute('data-blocked') || card.closest('[data-blocked]')) return;
-
   if (card.closest('ytd-shorts') || card.closest('#shorts-container') || window.location.pathname.startsWith('/shorts')) {
     return;
   }
 
-  if (card.querySelector('.yth-preview-overlay, .yth-shorts-overlay')) {
+  const tagName = card.tagName.toLowerCase();
+
+  const isShorts = tagName === 'ytd-reel-video-renderer' || 
+                   tagName === 'ytm-shorts-lockup-view-model' ||
+                   tagName === 'ytm-shorts-lockup-view-model-v2' || 
+                   card.className.includes('shortsLockupViewModel') ||
+                   card.querySelector('ytd-reel-video-renderer, [class*="shortsLockupViewModel"]') !== null;
+
+  const isSidebar = tagName === 'ytd-compact-video-renderer' || 
+                    tagName === 'yt-lockup-view-model' || 
+                    card.closest('#items.ytd-watch-next-secondary-results-renderer');
+
+  let targetContainer = card;
+  if (isSidebar) {
+    const foundThumb = card.querySelector('.ytThumbnailViewModelImage, ytd-thumbnail, [class*="ThumbnailViewModelImage"], yt-thumbnail-view-model');
+    if (foundThumb) targetContainer = foundThumb;
+  }
+
+  if (targetContainer.hasAttribute('data-blocked') || targetContainer.querySelector('.yth-preview-overlay, .yth-shorts-overlay, .yth-sidebar-overlay')) {
     card.setAttribute('data-blocked', 'true');
     return;
   }
 
-  const isShorts = card.tagName.toLowerCase() === 'ytd-reel-video-renderer' || 
-                   card.tagName.toLowerCase() === 'ytm-shorts-lockup-view-model' ||
-                   card.tagName.toLowerCase() === 'ytm-shorts-lockup-view-model-v2' || 
-                   card.className.includes('shortsLockupViewModel') ||
-                   card.querySelector('ytd-reel-video-renderer, [class*="shortsLockupViewModel"]') !== null;
-
   card.setAttribute('data-blocked', 'true');
+  targetContainer.setAttribute('data-blocked', 'true');
   card.classList.add('yth-blocked-card');
 
   const overlay = document.createElement('div');
-  
+
   if (isShorts) {
     overlay.className = 'yth-preview-overlay yth-shorts-overlay';
     overlay.style.backgroundImage = `url(${generateBlockedShortsImage(keyword)})`;
+    targetContainer.appendChild(overlay);
+  } else if (isSidebar) {
+    overlay.className = 'yth-preview-overlay yth-sidebar-overlay';
+    overlay.style.backgroundImage = `url(${generateBlockedImage(keyword)})`;
+    
+    targetContainer.style.setProperty('position', 'relative', 'important');
+    targetContainer.style.setProperty('overflow', 'hidden', 'important');
+    targetContainer.style.setProperty('display', 'block', 'important');
+    
+    targetContainer.appendChild(overlay);
   } else {
     overlay.className = 'yth-preview-overlay';
     overlay.style.backgroundImage = `url(${generateBlockedImage(keyword)})`;
+    targetContainer.appendChild(overlay);
   }
-  
-  card.appendChild(overlay);
 }
 
 function unblockAllCards() {
