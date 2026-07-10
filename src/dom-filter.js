@@ -51,6 +51,10 @@ function blockCard(card, keyword) {
     overlay.className = 'yth-preview-overlay yth-sidebar-overlay';
     overlay.style.backgroundImage = `url(${generateBlockedImage(keyword)})`;
     
+    if (targetContainer.style.position) targetContainer.dataset.origPosition = targetContainer.style.position;
+    if (targetContainer.style.overflow) targetContainer.dataset.origOverflow = targetContainer.style.overflow;
+    if (targetContainer.style.display) targetContainer.dataset.origDisplay = targetContainer.style.display;
+    
     targetContainer.style.setProperty('position', 'relative', 'important');
     targetContainer.style.setProperty('overflow', 'hidden', 'important');
     targetContainer.style.setProperty('display', 'block', 'important');
@@ -67,9 +71,28 @@ function unblockAllCards() {
   document.querySelectorAll('[data-blocked]').forEach(card => {
     card.removeAttribute('data-blocked');
     card.classList.remove('yth-blocked-card');
-	if (card.style.position === 'relative') card.style.removeProperty('position');
-    if (card.style.overflow === 'hidden') card.style.removeProperty('overflow');
-    if (card.style.display === 'block') card.style.removeProperty('display');
+
+    if (card.dataset.origPosition !== undefined) {
+      card.style.position = card.dataset.origPosition;
+      delete card.dataset.origPosition;
+    } else {
+      card.style.removeProperty('position');
+    }
+
+    if (card.dataset.origOverflow !== undefined) {
+      card.style.overflow = card.dataset.origOverflow;
+      delete card.dataset.origOverflow;
+    } else {
+      card.style.removeProperty('overflow');
+    }
+
+    if (card.dataset.origDisplay !== undefined) {
+      card.style.display = card.dataset.origDisplay;
+      delete card.dataset.origDisplay;
+    } else {
+      card.style.removeProperty('display');
+    }
+
     card.querySelectorAll('.yth-preview-overlay, .yth-shorts-overlay, .yth-sidebar-overlay').forEach(el => el.remove());
   });
 }
