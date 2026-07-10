@@ -5,7 +5,7 @@ const CONFIG = {
     'ytd-watch-card-compact-video-renderer', 'ytd-universal-watch-card-renderer',
     'ytd-search-pyv-renderer', 'ytm-shorts-lockup-view-model-v2', 
     'ytd-video-preview-container', 'ytd-playlist-renderer', 
-    'ytd-movie-renderer', 'ytd-rich-grid-row'
+    'ytd-movie-renderer', 'ytd-rich-grid-row', 'yt-lockup-view-model'
   ],
   DELAY: 100
 };
@@ -35,15 +35,27 @@ style.textContent = `
     top: 0 !important;
     left: 0 !important;
     width: 100% !important;
-    
     height: auto !important;
     aspect-ratio: 2 / 3 !important; 
-    
     border-radius: 12px !important;
     background-size: 100% 100% !important; 
     background-position: center !important;
     z-index: 10 !important;
     transform: none !important;
+    pointer-events: none !important;
+  }
+
+  .yth-sidebar-overlay {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    aspect-ratio: auto !important;
+    border-radius: 10px !important;
+    background-size: cover !important;
+    background-position: center !important;
+    z-index: 99 !important;
     pointer-events: none !important;
   }
 
