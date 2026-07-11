@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "YouTube Content Hider",
   "version": "1.0",
-  "description": "Hides clickbait and spoilers by keywords",
+  "description": "Automatically hides YouTube videos containing specified keywords. Replace clickbait and spoilers with stylized placeholders indicating the blocked word.",
   "permissions": ["storage"],
   "host_permissions": [
     "*://*.youtube.com/*"
