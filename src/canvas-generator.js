@@ -25,8 +25,8 @@ function drawCoverImage(ctx, canvas, bgSrc) {
 async function ensureFontIsReady() {
   if (isFontLoaded) return true;
   try {
-    const fontUrl = chrome.runtime.getURL('resources/HeavyFalcon.otf');
-    const customFont = new FontFace('HeavyFalcon', `url(${fontUrl})`);
+    const fontUrl = chrome.runtime.getURL('resources/fonts/PreviewFont.otf');
+    const customFont = new FontFace('PreviewFont', `url(${fontUrl})`);
     
     const loadedFont = await customFont.load();
     document.fonts.add(loadedFont);
@@ -42,14 +42,20 @@ function generateBlockedImage(keyword) {
   if (imageCache[keyword]) return Promise.resolve(imageCache[keyword]);
 
   return new Promise(async (resolve) => {
-    await ensureFontIsReady();
+    const isFontReady = await ensureFontIsReady();
+
+	if (!isFontReady) {
+	  const fallBackDataUrl = generateOldBlockedImage(keyword);
+	  imageCache[keyword] = fallBackDataUrl;
+	  return resolve(fallBackDataUrl);
+	}
 
     const canvas = document.createElement('canvas');
     canvas.width = 1280; 
     canvas.height = 720;
     const ctx = canvas.getContext('2d');
 
-    const isBgLoaded = await drawCoverImage(ctx, canvas, 'resources/bg_regular.png');
+    const isBgLoaded = await drawCoverImage(ctx, canvas, 'resources/backgrounds/bg_regular.png');
 
     if (!isBgLoaded) {
       const fallbackDataUrl = generateOldBlockedImage(keyword);
@@ -57,24 +63,20 @@ function generateBlockedImage(keyword) {
       return resolve(fallbackDataUrl);
     }
 
-    ctx.font = '60px "HeavyFalcon", sans-serif'; 
-    ctx.fillStyle = '#ffffff';
+    ctx.font = '55px "PreviewFont", sans-serif'; 
+    ctx.fillStyle = '#ed1b24';
     ctx.textAlign = 'left';      
     ctx.textBaseline = 'top';
 
-    ctx.shadowColor = '#ff2a5f';
-    ctx.shadowBlur = 10;
-
     const startX = 50;  
-    let startY = 130;   
-    const lineHeight = 70; 
+    let startY = 110;   
+    let lineHeight = 70; 
 
     const lines = [
       'THIS VIDEO MIGHT',
       'CONTAIN INFORMATION',
       `ABOUT "${keyword.toUpperCase()}"`,
-      'SO, WE COVERED IT.',
-      'WITH LOVE,'
+      'SO, WE COVERED IT.'
     ];
 
     lines.forEach(line => {
@@ -82,7 +84,19 @@ function generateBlockedImage(keyword) {
       startY += lineHeight;
     });
 
-    ctx.shadowBlur = 0;
+	if (CONFIG && CONFIG.PHRASES && CONFIG.PHRASES.length > 0) {
+	  const phrase = CONFIG.PHRASES[Math.floor(Math.random() * CONFIG.PHRASES.length)];
+	  startY = 450;
+	  lineHeight = 100;
+
+	  ctx.font = `${phrase[0]} "PreviewFont", sans-serif`;
+	  ctx.fillStyle = '#ffffff';
+
+	  phrase.slice(1).forEach(line => {
+	    ctx.fillText(line, startX, startY);
+	    startY += lineHeight;
+	  });
+	}
 
     const dataUrl = canvas.toDataURL('image/png');
     imageCache[keyword] = dataUrl;
@@ -95,14 +109,20 @@ function generateBlockedShortsImage(keyword) {
   if (imageCache[cacheKey]) return Promise.resolve(imageCache[cacheKey]);
 
   return new Promise(async (resolve) => {
-    await ensureFontIsReady();
+    const isFontReady = await ensureFontIsReady();
+
+	if (!isFontReady) {
+	  const fallbackDataUrl = generateOldBlockedShortsImage(keyword);
+	  imageCache[cacheKey] = fallbackDataUrl;
+	  return resolve(fallbackDataUrl);
+	}
 
     const canvas = document.createElement('canvas');
     canvas.width = 720; 
     canvas.height = 1024;
     const ctx = canvas.getContext('2d');
 
-    const isBgLoaded = await drawCoverImage(ctx, canvas, 'resources/bg_shorts.png');
+    const isBgLoaded = await drawCoverImage(ctx, canvas, 'resources/backgrounds/bg_shorts.png');
 
     if (!isBgLoaded) {
       const fallbackDataUrl = generateOldBlockedShortsImage(keyword);
@@ -110,38 +130,21 @@ function generateBlockedShortsImage(keyword) {
       return resolve(fallbackDataUrl);
     }
 
-    ctx.font = '34px "HeavyFalcon", sans-serif'; 
-    ctx.fillStyle = '#ffffff';
-    ctx.textAlign = 'center';
+    ctx.font = '55px "PreviewFont", sans-serif'; 
+    ctx.fillStyle = '#ed1b24';
+    ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
 
-    ctx.shadowColor = '#ff2a5f';
-    ctx.shadowBlur = 10;
-
-    const centerX = canvas.width / 2;
-    let startY = 140; 
+    const startX = 30;
+    let startY = 100; 
     const lineHeight = 55;
 
-    ctx.fillText('THIS VIDEO MIGHT', centerX, startY);
+    ctx.fillText('THIS MIGHT CONTAIN', startX, startY);
     startY += lineHeight;
-    ctx.fillText('CONTAIN INFORMATION', centerX, startY);
+    ctx.fillText('INFORMATION ABOUT', startX, startY);
     startY += lineHeight;
-    ctx.fillText('ABOUT', centerX, startY);
-    startY += lineHeight;
-
-    ctx.fillStyle = '#ff8fa3';
-    const maxTextWidth = canvas.width - 100; 
-    const displayKeyword = keyword.toUpperCase();
-    
-    ctx.fillText(`"${displayKeyword}"`, centerX, startY, maxTextWidth);
+    ctx.fillText(`"${keyword.toUpperCase()}"`, startX, startY, canvas.width - 100);
     startY += lineHeight + 15; 
-
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText('SO, WE COVERED IT.', centerX, startY);
-    startY += lineHeight;
-    ctx.fillText('WITH LOVE,', centerX, startY);
-
-    ctx.shadowBlur = 0;
 
     const dataUrl = canvas.toDataURL('image/png');
     imageCache[cacheKey] = dataUrl;
@@ -216,9 +219,7 @@ function generateOldBlockedImage(keyword) {
   ctx.letterSpacing = "1px";
   ctx.fillText('FILTERED BY YT CONTENT HIDER', canvas.width / 2, canvas.height - 65);
 
-  const dataUrl = canvas.toDataURL('image/png');
-  imageCache[keyword] = dataUrl;
-  return dataUrl;
+  return canvas.toDataURL('image/png');
 }
 
 function generateOldBlockedShortsImage(keyword) {
@@ -292,8 +293,6 @@ function generateOldBlockedShortsImage(keyword) {
   ctx.letterSpacing = "1px";
   ctx.fillText('FILTERED BY YT CONTENT HIDER', canvas.width / 2, canvas.height - 80);
 
-  const dataUrl = canvas.toDataURL('image/png');
-  imageCache[cacheKey] = dataUrl;
-  return dataUrl;
+  return canvas.toDataURL('image/png');
 }
 
