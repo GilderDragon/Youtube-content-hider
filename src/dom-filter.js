@@ -122,6 +122,16 @@ function hideVideos() {
       text += ' ' + (links[i].getAttribute('title') || links[i].getAttribute('aria-label') || '');
     }
 
+    const channelElements = card.querySelectorAll('#channel-name, #byline, .ytd-channel-name, [data-testid="channel-name"]');
+    channelElements.forEach(el => {
+      text += ' ' + (el.textContent || el.getAttribute('aria-label') || '');
+    });
+
+    const descriptionElements = card.querySelectorAll('#description-text, .metadata-snippet, #metadata-line, [id*="description"]');
+    descriptionElements.forEach(el => {
+      text += ' ' + el.textContent;
+    });
+
     const matched = containsBlockedKeywords(text);
     if (matched) blockCard(card, matched);
   });
