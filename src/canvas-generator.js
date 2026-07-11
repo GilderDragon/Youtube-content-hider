@@ -1,6 +1,155 @@
 const imageCache = {};
+let isFontLoaded = false;
+
+function drawCoverImage(ctx, canvas, bgSrc) {
+  return new Promise((resolve) => {
+    const bgImage = new Image();
+    bgImage.src = chrome.runtime.getURL(bgSrc);
+
+    bgImage.onload = () => {
+      const hRatio = canvas.width / bgImage.width;
+      const vRatio = canvas.height / bgImage.height;
+      const ratio = Math.max(hRatio, vRatio);
+      const offsetX = (canvas.width - bgImage.width * ratio) / 2;
+      const offsetY = (canvas.height - bgImage.height * ratio) / 2;
+      ctx.drawImage(bgImage, 0, 0, bgImage.width, bgImage.height, offsetX, offsetY, bgImage.width * ratio, bgImage.height * ratio);
+      resolve(true);
+    };
+
+    bgImage.onerror = () => {
+      resolve(false);
+    };
+  });
+}
+
+async function ensureFontIsReady() {
+  if (isFontLoaded) return true;
+  try {
+    const fontUrl = chrome.runtime.getURL('resources/HeavyFalcon.otf');
+    const customFont = new FontFace('HeavyFalcon', `url(${fontUrl})`);
+    
+    const loadedFont = await customFont.load();
+    document.fonts.add(loadedFont);
+    
+    isFontLoaded = true;
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
 
 function generateBlockedImage(keyword) {
+  if (imageCache[keyword]) return Promise.resolve(imageCache[keyword]);
+
+  return new Promise(async (resolve) => {
+    await ensureFontIsReady();
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 1280; 
+    canvas.height = 720;
+    const ctx = canvas.getContext('2d');
+
+    const isBgLoaded = await drawCoverImage(ctx, canvas, 'resources/bg_regular.png');
+
+    if (!isBgLoaded) {
+      const fallbackDataUrl = generateOldBlockedImage(keyword);
+      imageCache[keyword] = fallbackDataUrl;
+      return resolve(fallbackDataUrl);
+    }
+
+    ctx.font = '46px "HeavyFalcon", sans-serif'; 
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'left';      
+    ctx.textBaseline = 'top';
+
+    ctx.shadowColor = '#ff2a5f';
+    ctx.shadowBlur = 10;
+
+    const startX = 50;  
+    let startY = 130;   
+    const lineHeight = 70; 
+
+    const lines = [
+      'THIS VIDEO MIGHT',
+      'CONTAIN INFORMATION',
+      `ABOUT "${keyword.toUpperCase()}"`,
+      'SO, WE COVERED IT.',
+      'WITH LOVE,'
+    ];
+
+    lines.forEach(line => {
+      ctx.fillText(line, startX, startY);
+      startY += lineHeight;
+    });
+
+    ctx.shadowBlur = 0;
+
+    const dataUrl = canvas.toDataURL('image/png');
+    imageCache[keyword] = dataUrl;
+    resolve(dataUrl);
+  });
+}
+
+function generateBlockedShortsImage(keyword) {
+  const cacheKey = `shorts_${keyword}`;
+  if (imageCache[cacheKey]) return Promise.resolve(imageCache[cacheKey]);
+
+  return new Promise(async (resolve) => {
+    await ensureFontIsReady();
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 720; 
+    canvas.height = 1024;
+    const ctx = canvas.getContext('2d');
+
+    const isBgLoaded = await drawCoverImage(ctx, canvas, 'resources/bg_shorts.png');
+
+    if (!isBgLoaded) {
+      const fallbackDataUrl = generateOldBlockedShortsImage(keyword);
+      imageCache[cacheKey] = fallbackDataUrl;
+      return resolve(fallbackDataUrl);
+    }
+
+    ctx.font = '34px "HeavyFalcon", sans-serif'; 
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+
+    ctx.shadowColor = '#ff2a5f';
+    ctx.shadowBlur = 10;
+
+    const centerX = canvas.width / 2;
+    let startY = 140; 
+    const lineHeight = 55;
+
+    ctx.fillText('THIS VIDEO MIGHT', centerX, startY);
+    startY += lineHeight;
+    ctx.fillText('CONTAIN INFORMATION', centerX, startY);
+    startY += lineHeight;
+    ctx.fillText('ABOUT', centerX, startY);
+    startY += lineHeight;
+
+    ctx.fillStyle = '#ff8fa3';
+    const maxTextWidth = canvas.width - 100; 
+    const displayKeyword = keyword.toUpperCase();
+    
+    ctx.fillText(`"${displayKeyword}"`, centerX, startY, maxTextWidth);
+    startY += lineHeight + 15; 
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText('SO, WE COVERED IT.', centerX, startY);
+    startY += lineHeight;
+    ctx.fillText('WITH LOVE,', centerX, startY);
+
+    ctx.shadowBlur = 0;
+
+    const dataUrl = canvas.toDataURL('image/png');
+    imageCache[cacheKey] = dataUrl;
+    resolve(dataUrl);
+  });
+}
+
+function generateOldBlockedImage(keyword) {
   if (imageCache[keyword]) return imageCache[keyword];
 
   const canvas = document.createElement('canvas');
@@ -72,7 +221,7 @@ function generateBlockedImage(keyword) {
   return dataUrl;
 }
 
-function generateBlockedShortsImage(keyword) {
+function generateOldBlockedShortsImage(keyword) {
   const cacheKey = `shorts_${keyword}`;
   if (imageCache[cacheKey]) return imageCache[cacheKey];
 
