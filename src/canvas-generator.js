@@ -57,7 +57,7 @@ function generateBlockedImage(keyword) {
       return resolve(fallbackDataUrl);
     }
 
-    ctx.font = '46px "HeavyFalcon", sans-serif'; 
+    ctx.font = '60px "HeavyFalcon", sans-serif'; 
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'left';      
     ctx.textBaseline = 'top';
