@@ -29,6 +29,16 @@
 	  ],
       "run_at": "document_start"
     }
+  ],
+  "web_accessible_resources": [
+	{
+	  "resources": [
+		  "resources/bg_regular.png",
+		  "resources/bg_shorts.png",
+		  "resources/HeavyFalcon.otf"
+	  ],
+	  "matches": ["*://*.youtube.com/*"]
+	}
   ]
 }
 

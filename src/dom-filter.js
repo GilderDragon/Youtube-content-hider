@@ -50,11 +50,13 @@ function blockCard(card, keyword) {
 
   if (isShorts) {
     overlay.className = 'yth-preview-overlay yth-shorts-overlay';
-    overlay.style.backgroundImage = `url(${generateBlockedShortsImage(keyword)})`;
     targetContainer.appendChild(overlay);
+	generateBlockedShortsImage(keyword).then(imageUrl => {
+	  overlay.style.backgroundImage = `url(${imageUrl})`;
+	});
+
   } else if (isSidebar || isSearch) {
     overlay.className = 'yth-preview-overlay yth-sidebar-overlay';
-    overlay.style.backgroundImage = `url(${generateBlockedImage(keyword)})`;
     
     targetContainer.dataset.origPosition = targetContainer.style.position;
     targetContainer.dataset.origOverflow = targetContainer.style.overflow;
@@ -65,10 +67,17 @@ function blockCard(card, keyword) {
     targetContainer.style.setProperty('display', 'block', 'important');
     
     targetContainer.appendChild(overlay);
+
+	generateBlockedImage(keyword).then(imageUrl => {
+	  overlay.style.backgroundImage = `url(${imageUrl})`;
+	});
+
   } else {
     overlay.className = 'yth-preview-overlay';
-    overlay.style.backgroundImage = `url(${generateBlockedImage(keyword)})`;
     targetContainer.appendChild(overlay);
+	generateBlockedImage(keyword).then(imageUrl => {
+	  overlay.style.backgroundImage = `url(${imageUrl})`;
+	});
   }
 }
 
