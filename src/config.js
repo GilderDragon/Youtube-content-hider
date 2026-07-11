@@ -7,7 +7,11 @@ const CONFIG = {
     'ytd-video-preview-container', 'ytd-playlist-renderer', 
     'ytd-movie-renderer', 'ytd-rich-grid-row', 'yt-lockup-view-model'
   ],
-  DELAY: 100
+  DELAY: 100,
+  PHRASES: [
+	['90px', 'YEAH, WE HATE', 'SPOILERS TOO'],
+	['110px', 'OOPS...', 'NOT TODAY!']
+  ]
 };
 
 const style = document.createElement('style');
