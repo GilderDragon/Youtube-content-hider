@@ -10,11 +10,13 @@ function containsBlockedKeywords(text) {
 function blockCard(card, keyword) {
   if (card.hasAttribute('data-blocked') || card.closest('[data-blocked]')) return;
 
+  const tagName = card.tagName.toLowerCase();
+
+  if (tagName === 'ytd-channel-renderer') return;
+
   if (card.closest('ytd-shorts') || card.closest('#shorts-container') || window.location.pathname.startsWith('/shorts')) {
     return;
   }
-
-  const tagName = card.tagName.toLowerCase();
 
   const isShorts = tagName === 'ytd-reel-video-renderer' || 
                    tagName === 'ytm-shorts-lockup-view-model' ||
@@ -26,8 +28,11 @@ function blockCard(card, keyword) {
                     tagName === 'yt-lockup-view-model' || 
                     !!card.closest('#items.ytd-watch-next-secondary-results-renderer');
 
+  const isSearch = tagName === 'ytd-video-renderer' || card.hasAttribute('is-search');
+
   let targetContainer = card;
-  if (isSidebar) {
+
+  if (isSidebar || isSearch) {
     const foundThumb = card.querySelector('.ytThumbnailViewModelImage, ytd-thumbnail, [class*="ThumbnailViewModelImage"], yt-thumbnail-view-model');
     if (foundThumb) targetContainer = foundThumb;
   }
@@ -47,7 +52,7 @@ function blockCard(card, keyword) {
     overlay.className = 'yth-preview-overlay yth-shorts-overlay';
     overlay.style.backgroundImage = `url(${generateBlockedShortsImage(keyword)})`;
     targetContainer.appendChild(overlay);
-  } else if (isSidebar) {
+  } else if (isSidebar || isSearch) {
     overlay.className = 'yth-preview-overlay yth-sidebar-overlay';
     overlay.style.backgroundImage = `url(${generateBlockedImage(keyword)})`;
     
