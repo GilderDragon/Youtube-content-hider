@@ -1,6 +1,17 @@
 const imageCache = {};
 let isFontLoaded = false;
 
+const keywordPhraseQueues = {};
+
+function shuffle(array) {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+	const j = Math.floor(Math.random() * (i + 1));
+	[arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 function drawCoverImage(ctx, canvas, bgSrc) {
   return new Promise((resolve) => {
     const bgImage = new Image();
@@ -39,16 +50,36 @@ async function ensureFontIsReady() {
 }
 
 function generateBlockedImage(keyword) {
-  if (imageCache[keyword]) return Promise.resolve(imageCache[keyword]);
+  const totalPhrases = (CONFIG && CONFIG.PHRASES) ? CONFIG.PHRASES.length : 0;
+  let currentPhraseIndex = 0;
+
+  if (totalPhrases > 0) {
+    if (!keywordPhraseQueues[keyword]) {
+      const baseIndices = Array.from({ length: totalPhrases }, (_, i) => i);
+      keywordPhraseQueues[keyword] = shuffle(baseIndices);
+    }
+
+    if (keywordPhraseQueues[keyword].length > 0) {
+      currentPhraseIndex = keywordPhraseQueues[keyword].pop();
+    } else {
+      currentPhraseIndex = Math.floor(Math.random() * totalPhrases);
+    }
+  }
+
+  const cacheKey = `${keyword}_${currentPhraseIndex}`;
+
+  if (imageCache[cacheKey]) {
+    return Promise.resolve(imageCache[cacheKey]);
+  }
 
   return new Promise(async (resolve) => {
     const isFontReady = await ensureFontIsReady();
 
-	if (!isFontReady) {
-	  const fallBackDataUrl = generateOldBlockedImage(keyword);
-	  imageCache[keyword] = fallBackDataUrl;
-	  return resolve(fallBackDataUrl);
-	}
+    if (!isFontReady) {
+      const fallBackDataUrl = generateOldBlockedImage(keyword);
+      imageCache[cacheKey] = fallBackDataUrl;
+      return resolve(fallBackDataUrl);
+    }
 
     const canvas = document.createElement('canvas');
     canvas.width = 1280; 
@@ -59,7 +90,7 @@ function generateBlockedImage(keyword) {
 
     if (!isBgLoaded) {
       const fallbackDataUrl = generateOldBlockedImage(keyword);
-      imageCache[keyword] = fallbackDataUrl;
+      imageCache[cacheKey] = fallbackDataUrl;
       return resolve(fallbackDataUrl);
     }
 
@@ -84,22 +115,23 @@ function generateBlockedImage(keyword) {
       startY += lineHeight;
     });
 
-	if (CONFIG && CONFIG.PHRASES && CONFIG.PHRASES.length > 0) {
-	  const phrase = CONFIG.PHRASES[Math.floor(Math.random() * CONFIG.PHRASES.length)];
-	  startY = 450;
-	  lineHeight = 100;
+    if (totalPhrases > 0) {
+      const phrase = CONFIG.PHRASES[currentPhraseIndex];
 
-	  ctx.font = `${phrase[0]} "PreviewFont", sans-serif`;
-	  ctx.fillStyle = '#ffffff';
+      startY = 450;
+      lineHeight = 100;
 
-	  phrase.slice(1).forEach(line => {
-	    ctx.fillText(line, startX, startY);
-	    startY += lineHeight;
-	  });
-	}
+      ctx.font = `${phrase[0]} "PreviewFont", sans-serif`;
+      ctx.fillStyle = '#ffffff';
+
+      phrase.slice(1).forEach(line => {
+        ctx.fillText(line, startX, startY);
+        startY += lineHeight;
+      });
+    }
 
     const dataUrl = canvas.toDataURL('image/png');
-    imageCache[keyword] = dataUrl;
+    imageCache[cacheKey] = dataUrl;
     resolve(dataUrl);
   });
 }
