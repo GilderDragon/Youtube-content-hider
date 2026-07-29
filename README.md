@@ -9,7 +9,7 @@
 - **Visual overlay** – blocked videos are covered with a stylish overlay that shows: the **triggering keyword** so you know why it was hidden.
 - **Blocking preview** – when multiple keywords match, the overlay can display a shuffled set of matched phrases, giving you more context about why the video was hidden.
 - **Works everywhere on YouTube** – homepage, search results, sidebar recommendations, and even **Shorts** (with a special vertical overlay).
-- **Smart Canvas‑generated overlays** – each block is a uniquely generated image, cached for performance.
+- **Canvas‑generated overlays** – each block is a generated image, cached for performance.
 - **Easy management popup** – add or remove keywords with duplicate detection.
 - **One‑click enable/disable** – turn the filter on or off without losing your keyword list.
 - **Lightweight and performant** – minimal impact on browsing.
