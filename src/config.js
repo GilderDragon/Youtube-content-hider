@@ -23,7 +23,8 @@ const CONFIG = {
 	['110px', '<3'],
 	['110px', 'Spoiler', 'Alert!!!'],
 	['110px', 'qwerty'],
-	['110px', 'kcolbreliops']
+	['110px', 'kcolbreliops'],
+	['75px', '... .--. --- .. .-.. . .-.', '-... .-.. --- -.-. -.-'],
   ]
 };
 

@@ -1,4 +1,4 @@
-# YouTube Content Hider
+# YouTube Spoiler Block
 
 > Hide YouTube videos that contain unwanted keywords – take back control of your feed.
 
@@ -8,7 +8,7 @@
 - **Real‑time hiding** – uses `MutationObserver` to catch new videos as they load (scrolling, navigation, dynamic updates).
 - **Visual overlay** – blocked videos are covered with a stylish overlay that shows: the **triggering keyword** so you know why it was hidden.
 - **Blocking preview** – when multiple keywords match, the overlay can display a shuffled set of matched phrases, giving you more context about why the video was hidden.
-- **Works everywhere on YouTube** – homepage, search results, sidebar recommendations, playlists, and even **Shorts** (with a special vertical overlay).
+- **Works everywhere on YouTube** – homepage, search results, sidebar recommendations, and even **Shorts** (with a special vertical overlay).
 - **Smart Canvas‑generated overlays** – each block is a uniquely generated image, cached for performance.
 - **Easy management popup** – add or remove keywords with duplicate detection.
 - **One‑click enable/disable** – turn the filter on or off without losing your keyword list.
@@ -18,7 +18,7 @@
 
 - The extension injects a content script into YouTube pages.
 - A `MutationObserver` watches for DOM changes (new video cards, infinite scroll, navigation).
-- For each new video element (homepage, search, sidebar, Shorts, playlists), it checks text content against your blocklist.
+- For each new video element (homepage, search, sidebar, Shorts), it checks text content against your blocklist.
 - If a match is found, it generates a canvas‑based overlay (with the blocked keyword) and places it exactly over the video thumbnail.
 - All settings are stored in `chrome.storage.local` and sync across tabs.
 
