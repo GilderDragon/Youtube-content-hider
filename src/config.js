@@ -11,20 +11,20 @@ const CONFIG = {
   PHRASES: [
 	['90px', 'YEAH, WE HATE', 'SPOILERS TOO'],
 	['110px', 'OOPS...', 'NOT TODAY!'],
-	['110px',  'With love'],
-	['90px', 'Another one', 'bites the dust!'],
-	['90px', 'What spoilers?', 'I dont see any!'],
-	['110px', 'You shall', 'not pass!'],
-	['90px', 'Was that the', 'bite of 87?!'],
-	['110px', 'Stay hydrated!'],
-	['110px',  '"Funny' ,'comment"'],
-	['110px', 'Your safety', 'goggles'],
-	['110px', 'Nuh uh'],
+	['110px', 'WITH LOVE'],
+	['90px', 'ANOTHER ONE', 'BITES THE DUST!'],
+	['75px', 'WHAT SPOILERS?', 'I DONT SEE ANY!'],
+	['110px', 'YOU SHALL', 'NOT PASS!'],
+	['90px', 'WAS THAT THE', 'BITE OF 87?!'],
+	['110px', 'STAY', 'HYDRATED!'],
+	['110px', '"FUNNY', 'COMMENT"'],
+	['90px', 'YOUR SAFETY', 'GOGGLES'],
+	['110px', 'NUH UH'],
 	['110px', '<3'],
-	['110px', 'Spoiler', 'Alert!!!'],
-	['110px', 'qwerty'],
-	['110px', 'kcolbreliops'],
-	['75px', '... .--. --- .. .-.. . .-.', '-... .-.. --- -.-. -.-'],
+	['110px', 'SPOILER', 'ALERT!!!'],
+	['110px', 'QWERTY'],
+	['90px', 'KCOLBRELIOPS'],
+	['75px', '... .--. --- .. .-.. . .-.', '-... .-.. --- -.-. -.-']
   ]
 };
 
