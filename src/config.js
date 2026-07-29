@@ -10,7 +10,20 @@ const CONFIG = {
   DELAY: 100,
   PHRASES: [
 	['90px', 'YEAH, WE HATE', 'SPOILERS TOO'],
-	['110px', 'OOPS...', 'NOT TODAY!']
+	['110px', 'OOPS...', 'NOT TODAY!'],
+	['110px',  'With love'],
+	['90px', 'Another one', 'bites the dust!'],
+	['90px', 'What spoilers?', 'I dont see any!'],
+	['110px', 'You shall', 'not pass!'],
+	['90px', 'Was that the', 'bite of 87?!'],
+	['110px', 'Stay hydrated!'],
+	['110px',  '"Funny' ,'comment"'],
+	['110px', 'Your safety', 'goggles'],
+	['110px', 'Nuh uh'],
+	['110px', '<3'],
+	['110px', 'Spoiler', 'Alert!!!'],
+	['110px', 'qwerty'],
+	['110px', 'kcolbreliops']
   ]
 };
 
