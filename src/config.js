@@ -7,7 +7,25 @@ const CONFIG = {
     'ytd-video-preview-container', 'ytd-playlist-renderer', 
     'ytd-movie-renderer', 'ytd-rich-grid-row', 'yt-lockup-view-model'
   ],
-  DELAY: 100
+  DELAY: 100,
+  PHRASES: [
+	['90px', 'YEAH, WE HATE', 'SPOILERS TOO'],
+	['110px', 'OOPS...', 'NOT TODAY!'],
+	['110px', 'WITH LOVE'],
+	['90px', 'ANOTHER ONE', 'BITES THE DUST!'],
+	['75px', 'WHAT SPOILERS?', 'I DON\'T SEE ANY!'],
+	['110px', 'YOU SHALL', 'NOT PASS!'],
+	['90px', 'WAS THAT THE', 'BITE OF 87?!'],
+	['110px', 'STAY', 'HYDRATED!'],
+	['110px', '"FUNNY', 'COMMENT"'],
+	['90px', 'YOUR SAFETY', 'GOGGLES'],
+	['110px', 'NUH UH'],
+	['110px', '<3'],
+	['110px', 'SPOILER', 'ALERT!!!'],
+	['110px', 'QWERTY'],
+	['90px', 'KCOLBRELIOPS'],
+	['75px', '... .--. --- .. .-.. . .-.', '-... .-.. --- -.-. -.-']
+  ]
 };
 
 const style = document.createElement('style');

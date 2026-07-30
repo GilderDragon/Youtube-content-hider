@@ -48,12 +48,12 @@ function loadSettings() {
 
 function updateToggleButton() {
   if (isEnabled) {
-    toggleBtn.textContent = '🛡️ Extension: ENABLED';
+    toggleBtn.textContent = '🛡️ ENABLED';
     toggleBtn.style.backgroundColor = 'rgba(62, 166, 255, 0.15)';
     toggleBtn.style.color = '#3ea6ff';
     toggleBtn.style.border = '1px solid #3ea6ff';
   } else {
-    toggleBtn.textContent = '🛡️ Extension: DISABLED';
+    toggleBtn.textContent = '🛡️ DISABLED';
     toggleBtn.style.backgroundColor = 'rgba(255, 42, 95, 0.15)';
     toggleBtn.style.color = '#ff2a5f';
     toggleBtn.style.border = '1px solid #ff2a5f';

@@ -1,6 +1,187 @@
 const imageCache = {};
+let isFontLoaded = false;
+
+const keywordPhraseQueues = {};
+
+function shuffle(array) {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function drawCoverImage(ctx, canvas, bgSrc) {
+  return new Promise((resolve) => {
+    const bgImage = new Image();
+    bgImage.src = chrome.runtime.getURL(bgSrc);
+
+    bgImage.onload = () => {
+      const hRatio = canvas.width / bgImage.width;
+      const vRatio = canvas.height / bgImage.height;
+      const ratio = Math.max(hRatio, vRatio);
+      const offsetX = (canvas.width - bgImage.width * ratio) / 2;
+      const offsetY = (canvas.height - bgImage.height * ratio) / 2;
+      ctx.drawImage(bgImage, 0, 0, bgImage.width, bgImage.height, offsetX, offsetY, bgImage.width * ratio, bgImage.height * ratio);
+      resolve(true);
+    };
+
+    bgImage.onerror = () => {
+      resolve(false);
+    };
+  });
+}
+
+async function ensureFontIsReady() {
+  if (isFontLoaded) return true;
+  try {
+    const fontUrl = chrome.runtime.getURL('resources/fonts/PreviewFont.otf');
+    const customFont = new FontFace('PreviewFont', `url(${fontUrl})`);
+    
+    const loadedFont = await customFont.load();
+    document.fonts.add(loadedFont);
+    
+    isFontLoaded = true;
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+function getNextPhraseIndex(queueKey, totalPhrases) {
+  if (totalPhrases <= 0) return 0;
+
+  if (!keywordPhraseQueues[queueKey]) {
+    const baseIndices = Array.from({ length: totalPhrases }, (_, i) => i);
+    keywordPhraseQueues[queueKey] = shuffle(baseIndices);
+  }
+
+  if (keywordPhraseQueues[queueKey].length > 0) {
+    return keywordPhraseQueues[queueKey].pop();
+  } else {
+    return Math.floor(Math.random() * totalPhrases);
+  }
+}
 
 function generateBlockedImage(keyword) {
+  const totalPhrases = (CONFIG && CONFIG.PHRASES) ? CONFIG.PHRASES.length : 0;
+  const currentPhraseIndex = getNextPhraseIndex(keyword, totalPhrases);
+  const cacheKey = `${keyword}_${currentPhraseIndex}`;
+
+  if (imageCache[cacheKey]) {
+    return Promise.resolve(imageCache[cacheKey]);
+  }
+
+  return new Promise(async (resolve) => {
+    const isFontReady = await ensureFontIsReady();
+
+    if (!isFontReady) {
+      const fallBackDataUrl = generateOldBlockedImage(keyword);
+      return resolve(fallBackDataUrl);
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 1280; 
+    canvas.height = 720;
+    const ctx = canvas.getContext('2d');
+
+    const isBgLoaded = await drawCoverImage(ctx, canvas, 'resources/backgrounds/bg_regular.png');
+
+    if (!isBgLoaded) {
+      const fallbackDataUrl = generateOldBlockedImage(keyword);
+      return resolve(fallbackDataUrl);
+    }
+
+    ctx.font = '55px "PreviewFont", sans-serif'; 
+    ctx.fillStyle = '#ed1b24';
+    ctx.textAlign = 'left';      
+    ctx.textBaseline = 'top';
+
+    const startX = 50;  
+    let startY = 110;   
+    let lineHeight = 70; 
+
+    const lines = [
+      'THIS VIDEO MIGHT',
+      'CONTAIN INFORMATION',
+      `ABOUT "${keyword.toUpperCase()}"`,
+      'SO, WE COVERED IT.'
+    ];
+
+    lines.forEach(line => {
+      ctx.fillText(line, startX, startY);
+      startY += lineHeight;
+    });
+
+    if (totalPhrases > 0) {
+      const phrase = CONFIG.PHRASES[currentPhraseIndex];
+
+      startY = 450;
+      lineHeight = 100;
+
+      ctx.font = `${phrase[0]} "PreviewFont", sans-serif`;
+      ctx.fillStyle = '#ffffff';
+
+      phrase.slice(1).forEach(line => {
+        ctx.fillText(line, startX, startY);
+        startY += lineHeight;
+      });
+    }
+
+    const dataUrl = canvas.toDataURL('image/png');
+    imageCache[cacheKey] = dataUrl;
+    resolve(dataUrl);
+  });
+}
+
+function generateBlockedShortsImage(keyword) {
+  const cacheKey = `shorts_${keyword}`;
+  if (imageCache[cacheKey]) return Promise.resolve(imageCache[cacheKey]);
+
+  return new Promise(async (resolve) => {
+    const isFontReady = await ensureFontIsReady();
+
+    if (!isFontReady) {
+      const fallbackDataUrl = generateOldBlockedShortsImage(keyword);
+      return resolve(fallbackDataUrl);
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 720; 
+    canvas.height = 1024;
+    const ctx = canvas.getContext('2d');
+
+    const isBgLoaded = await drawCoverImage(ctx, canvas, 'resources/backgrounds/bg_shorts.png');
+
+    if (!isBgLoaded) {
+      const fallbackDataUrl = generateOldBlockedShortsImage(keyword);
+      return resolve(fallbackDataUrl);
+    }
+
+    ctx.font = '55px "PreviewFont", sans-serif'; 
+    ctx.fillStyle = '#ed1b24';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+
+    const startX = 30;
+    let startY = 100; 
+    const lineHeight = 55;
+
+    ctx.fillText('THIS MIGHT CONTAIN', startX, startY);
+    startY += lineHeight;
+    ctx.fillText('INFORMATION ABOUT', startX, startY);
+    startY += lineHeight;
+    ctx.fillText(`"${keyword.toUpperCase()}"`, startX, startY, canvas.width - 100);
+    startY += lineHeight + 15; 
+
+    const dataUrl = canvas.toDataURL('image/png');
+    imageCache[cacheKey] = dataUrl;
+    resolve(dataUrl);
+  });
+}
+
+function generateOldBlockedImage(keyword) {
   if (imageCache[keyword]) return imageCache[keyword];
 
   const canvas = document.createElement('canvas');
@@ -72,7 +253,7 @@ function generateBlockedImage(keyword) {
   return dataUrl;
 }
 
-function generateBlockedShortsImage(keyword) {
+function generateOldBlockedShortsImage(keyword) {
   const cacheKey = `shorts_${keyword}`;
   if (imageCache[cacheKey]) return imageCache[cacheKey];
 
@@ -147,4 +328,3 @@ function generateBlockedShortsImage(keyword) {
   imageCache[cacheKey] = dataUrl;
   return dataUrl;
 }
-
