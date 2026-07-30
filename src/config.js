@@ -13,7 +13,7 @@ const CONFIG = {
 	['110px', 'OOPS...', 'NOT TODAY!'],
 	['110px', 'WITH LOVE'],
 	['90px', 'ANOTHER ONE', 'BITES THE DUST!'],
-	['75px', 'WHAT SPOILERS?', 'I DONT SEE ANY!'],
+	['75px', 'WHAT SPOILERS?', 'I DON\'T SEE ANY!'],
 	['110px', 'YOU SHALL', 'NOT PASS!'],
 	['90px', 'WAS THAT THE', 'BITE OF 87?!'],
 	['110px', 'STAY', 'HYDRATED!'],
