@@ -51,9 +51,10 @@ function blockCard(card, keyword) {
   if (isShorts) {
     overlay.className = 'yth-preview-overlay yth-shorts-overlay';
     targetContainer.appendChild(overlay);
-	generateBlockedShortsImage(keyword).then(imageUrl => {
-	  overlay.style.backgroundImage = `url(${imageUrl})`;
-	});
+    generateBlockedShortsImage(keyword).then(imageUrl => {
+      if (!overlay.isConnected) return;
+      overlay.style.backgroundImage = `url(${imageUrl})`;
+    });
 
   } else if (isSidebar || isSearch) {
     overlay.className = 'yth-preview-overlay yth-sidebar-overlay';
