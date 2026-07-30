@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "YouTube Spoiler Block",
-  "version": "1.0",
+  "version": "1.0.0",
   "description": "Automatically hides YouTube videos containing specified keywords. Replace clickbait and spoilers with stylized placeholders indicating the blocked word.",
   "permissions": ["storage"],
   "host_permissions": [
