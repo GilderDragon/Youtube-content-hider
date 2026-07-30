@@ -6,8 +6,8 @@ const keywordPhraseQueues = {};
 function shuffle(array) {
   const arr = [...array];
   for (let i = arr.length - 1; i > 0; i--) {
-	const j = Math.floor(Math.random() * (i + 1));
-	[arr[i], arr[j]] = [arr[j], arr[i]];
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
 }
@@ -49,23 +49,24 @@ async function ensureFontIsReady() {
   }
 }
 
-function generateBlockedImage(keyword) {
-  const totalPhrases = (CONFIG && CONFIG.PHRASES) ? CONFIG.PHRASES.length : 0;
-  let currentPhraseIndex = 0;
+function getNextPhraseIndex(queueKey, totalPhrases) {
+  if (totalPhrases <= 0) return 0;
 
-  if (totalPhrases > 0) {
-    if (!keywordPhraseQueues[keyword]) {
-      const baseIndices = Array.from({ length: totalPhrases }, (_, i) => i);
-      keywordPhraseQueues[keyword] = shuffle(baseIndices);
-    }
-
-    if (keywordPhraseQueues[keyword].length > 0) {
-      currentPhraseIndex = keywordPhraseQueues[keyword].pop();
-    } else {
-      currentPhraseIndex = Math.floor(Math.random() * totalPhrases);
-    }
+  if (!keywordPhraseQueues[queueKey]) {
+    const baseIndices = Array.from({ length: totalPhrases }, (_, i) => i);
+    keywordPhraseQueues[queueKey] = shuffle(baseIndices);
   }
 
+  if (keywordPhraseQueues[queueKey].length > 0) {
+    return keywordPhraseQueues[queueKey].pop();
+  } else {
+    return Math.floor(Math.random() * totalPhrases);
+  }
+}
+
+function generateBlockedImage(keyword) {
+  const totalPhrases = (CONFIG && CONFIG.PHRASES) ? CONFIG.PHRASES.length : 0;
+  const currentPhraseIndex = getNextPhraseIndex(keyword, totalPhrases);
   const cacheKey = `${keyword}_${currentPhraseIndex}`;
 
   if (imageCache[cacheKey]) {
@@ -77,7 +78,6 @@ function generateBlockedImage(keyword) {
 
     if (!isFontReady) {
       const fallBackDataUrl = generateOldBlockedImage(keyword);
-      imageCache[cacheKey] = fallBackDataUrl;
       return resolve(fallBackDataUrl);
     }
 
@@ -90,7 +90,6 @@ function generateBlockedImage(keyword) {
 
     if (!isBgLoaded) {
       const fallbackDataUrl = generateOldBlockedImage(keyword);
-      imageCache[cacheKey] = fallbackDataUrl;
       return resolve(fallbackDataUrl);
     }
 
@@ -143,11 +142,10 @@ function generateBlockedShortsImage(keyword) {
   return new Promise(async (resolve) => {
     const isFontReady = await ensureFontIsReady();
 
-	if (!isFontReady) {
-	  const fallbackDataUrl = generateOldBlockedShortsImage(keyword);
-	  imageCache[cacheKey] = fallbackDataUrl;
-	  return resolve(fallbackDataUrl);
-	}
+    if (!isFontReady) {
+      const fallbackDataUrl = generateOldBlockedShortsImage(keyword);
+      return resolve(fallbackDataUrl);
+    }
 
     const canvas = document.createElement('canvas');
     canvas.width = 720; 
@@ -158,7 +156,6 @@ function generateBlockedShortsImage(keyword) {
 
     if (!isBgLoaded) {
       const fallbackDataUrl = generateOldBlockedShortsImage(keyword);
-      imageCache[cacheKey] = fallbackDataUrl;
       return resolve(fallbackDataUrl);
     }
 
@@ -327,5 +324,7 @@ function generateOldBlockedShortsImage(keyword) {
   ctx.letterSpacing = "1px";
   ctx.fillText('FILTERED BY YT CONTENT HIDER', canvas.width / 2, canvas.height - 80);
 
-  return canvas.toDataURL('image/png');
+  const dataUrl = canvas.toDataURL('image/png');
+  imageCache[cacheKey] = dataUrl;
+  return dataUrl;
 }
