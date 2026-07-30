@@ -251,7 +251,9 @@ function generateOldBlockedImage(keyword) {
   ctx.letterSpacing = "1px";
   ctx.fillText('FILTERED BY YT CONTENT HIDER', canvas.width / 2, canvas.height - 65);
 
-  return canvas.toDataURL('image/png');
+  const dataUrl = canvas.toDataURL('image/png');
+  imageCache[keyword] = dataUrl;
+  return dataUrl;
 }
 
 function generateOldBlockedShortsImage(keyword) {
@@ -327,4 +329,3 @@ function generateOldBlockedShortsImage(keyword) {
 
   return canvas.toDataURL('image/png');
 }
-
