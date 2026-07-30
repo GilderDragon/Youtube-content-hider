@@ -119,7 +119,7 @@ clearBtn.addEventListener('click', () => {
   if (!clearConfirmActive) {
     clearConfirmActive = true;
     clearBtn.textContent = '⚠️ Click again to confirm!';
-    clearBtn.style.backgroundColor = 'rgba(255, 42, 95, 0.1)';
+    clearBtn.style.backgroundColor = 'rgba(237, 28, 36, 0.1)';
     
     clearTimer = setTimeout(() => {
       clearConfirmActive = false;
