@@ -7,7 +7,7 @@
 - **Keyword‑based filtering** – add any words or phrases you want to block.
 - **Real‑time hiding** – uses `MutationObserver` to catch new videos as they load (scrolling, navigation, dynamic updates).
 - **Visual overlay** – blocked videos are covered with a stylish overlay that shows: the **triggering keyword** so you know why it was hidden.
-- **Blocking preview** – when multiple keywords match, the overlay can display a shuffled set of matched phrases, giving you more context about why the video was hidden.
+- **Blocking preview** – the overlay can also include a randomized phrase from a preset list for variety, in addition to showing the triggering keyword.
 - **Works everywhere on YouTube** – homepage, search results, sidebar recommendations, and even **Shorts** (with a special vertical overlay).
 - **Canvas‑generated overlays** – each block is a generated image, cached for performance.
 - **Easy management popup** – add or remove keywords with duplicate detection.
