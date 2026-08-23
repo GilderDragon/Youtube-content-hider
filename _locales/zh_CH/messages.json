@@ -1,0 +1,45 @@
+{
+	"extName": {
+		"message": "SpoilerBlock For YouTube"
+	},
+	"extDescription": {
+		"message": "自动隐藏包含指定关键词的 YouTube 视频。将标题党和剧透内容替换为风格化的占位符。"
+	},
+	"popupEmptyMsgTop": {
+		"message": "尚未添加任何关键词"
+	},
+	"popupEmptyMsgBottom": {
+		"message": "添加关键词以隐藏剧透和标题党"
+	},
+	"rmBtn": {
+		"message": "删除"
+	},
+	"inscBelow": {
+		"message": "防范已激活"
+	},
+	"extStatusEnabled": {
+		"message": "🛡️ 已启用"
+	},
+	"extStatusDisabled": {
+		"message": "🛡️ 已禁用"
+	},
+	"rmConfirmBtn": {
+		"message": "⚠️ 请再次点击以确认！"
+	},
+	"rmAllBtn": {
+		"message": "清除所有关键词"
+	},
+	"inputPlaceholder": {
+		"message": "关键词或短语..."
+	},
+	"addBtn": {
+		"message": "添加"
+	},
+	"errMsgInList": {
+		"message": "已在列表之中！"
+	},
+	"footer": {
+		"message": "拦截剧透与标题党"
+	}
+}
+

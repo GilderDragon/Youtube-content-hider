@@ -1,0 +1,45 @@
+{
+	"extName": {
+		"message": "SpoilerBlock für YouTube"
+	},
+	"extDescription": {
+		"message": "Blendet YouTube-Videos, die bestimmte Schlüsselwörter enthalten, automatisch aus. Ersetzt Clickbait und Spoiler durchstilisierte Platzhalter."
+	},
+	"popupEmptyMsgTop": {
+		"message": "Noch keine Schlüsselwörter hinzugefügt"
+	},
+	"popupEmptyMsgBottom": {
+		"message": "Fügen Sie Wörter hinzu, um Spoiler & Clickbait auszublenden"
+	},
+	"rmBtn": {
+		"message": "Entfernen"
+	},
+	"inscBelow": {
+		"message": "Schutz aktiv"
+	},
+	"extStatusEnabled": {
+		"message": "🛡️ AKTIVIERT"
+	},
+	"extStatusDisabled": {
+		"message": "🛡️ DEAKTIVIERT"
+	},
+	"rmConfirmBtn": {
+		"message": "⚠️ Zum Bestätigen erneut klicken!"
+	},
+	"rmAllBtn": {
+		"message": "Alle Schlüsselwörter löschen"
+	},
+	"inputPlaceholder": {
+		"message": "Schlüsselwort oder Phrase..."
+	},
+	"addBtn": {
+		"message": "Hinzufügen"
+	},
+	"errMsgInList": {
+		"message": "Bereits in der Liste vorhanden!"
+	},
+	"footer": {
+		"message": "Blockiert Spoiler & Clickbait"
+	}
+}
+

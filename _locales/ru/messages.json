@@ -1,0 +1,45 @@
+{
+	"extName": {
+		"message": "SpoilerBlock для YouTube"
+	},
+	"extDescription": {
+		"message": "Автоматически скрывает видео на YouTube, содержащие указанные ключевые слова. Заменяет кликбейт и спойлеры стилизованными заглушками."
+	},
+	"popupEmptyMsgTop": {
+		"message": "Ключевые слова еще не добавлены"
+	},
+	"popupEmptyMsgBottom": {
+		"message": "Добавьте слова, чтобы скрыть спойлеры и кликбейт"
+	},
+	"rmBtn": {
+		"message": "Удалить"
+	},
+	"inscBelow": {
+		"message": "Защита активна"
+	},
+	"extStatusEnabled": {
+		"message": "🛡️ ВКЛЮЧЕНО"
+	},
+	"extStatusDisabled": {
+		"message": "🛡️ ВЫКЛЮЧЕНО"
+	},
+	"rmConfirmBtn": {
+		"message": "⚠️ Нажмите еще раз для подтверждения!"
+	},
+	"rmAllBtn": {
+		"message": "Очистить все слова"
+	},
+	"inputPlaceholder": {
+		"message": "Ключевое слово или фраза..."
+	},
+	"addBtn": {
+		"message": "Добавить"
+	},
+	"errMsgInList": {
+		"message": "Уже есть в списке!"
+	},
+	"footer": {
+		"message": "Блокирует спойлеры и кликбейт"
+	}
+}
+

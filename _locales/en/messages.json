@@ -1,0 +1,59 @@
+{
+	"extName": {
+		"message": "SpoilerBlock For YouTube",
+		"description": "Extension name"
+	},
+	"extDescription": {
+		"message": "Automaticly hides YouTube videos containing specified keywords. Replace clickbait and spoilers with stylized placeholders.",
+		"description": "Extension description"
+	},
+	"popupEmptyMsgTop": {
+		"message": "No keywords added yet",
+		"description": "Message shown when the keyword list is empty"
+	},
+	"popupEmptyMsgBottom": {
+		"message": "Add words to hide spoilers & clickbait",
+		"description": "Call to action instruction for empty list"
+	},
+	"rmBtn": {
+		"message": "Remove",
+		"description": "Button to delete a single keyword"
+	},
+	"inscBelow": {
+		"message": "Protection Active",
+		"description": "Status text showing extension is working"
+	},
+	"extStatusEnabled": {
+		"message": "🛡️ ENABLED",
+		"description": "Status badge for enabled state"
+	},
+	"extStatusDisabled": {
+		"message": "🛡️ DISABLED",
+		"description": "Status badge for disabled state"
+	},
+	"rmConfirmBtn": {
+		"message": "⚠️ Click again to confirm!",
+		"description": "Warning message for deletion confirmation"
+	},
+	"rmAllBtn": {
+		"message": "Clear All Keywords",
+		"description": "Button to delete all keywords at once"
+	},
+	"inputPlaceholder": {
+		"message": "Keyword or phrase...",
+		"description": "Placeholder text for the input field"
+	},
+	"addBtn": {
+		"message": "Add",
+		"description": "Button to submit a new keyword"
+	},
+	"errMsgInList": {
+		"message": "Already in the list!",
+		"description": "Error message for duplicate keywords"
+	},
+	"footer": {
+		"message": "Blocks spoilers & clickbait",
+		"description": "Footer text at the bottom of the popup"
+	}
+}
+

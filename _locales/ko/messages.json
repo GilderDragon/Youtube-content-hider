@@ -1,0 +1,45 @@
+{
+	"extName": {
+		"message": "SpoilerBlock For YouTube"
+	},
+	"extDescription": {
+		"message": "지정한 키워드가 포함된 YouTube 동영상을 자동으로 숨깁니다. 어그로성 클릭베이트와 스포일러를 스타일이 적용된 대체 창으로 바꿉니다."
+	},
+	"popupEmptyMsgTop": {
+		"message": "아직 추가된 키워드가 없습니다"
+	},
+	"popupEmptyMsgBottom": {
+		"message": "단어를 추가하여 스포일러와 클릭베이트를 숨기세요"
+	},
+	"rmBtn": {
+		"message": "삭제"
+	},
+	"inscBelow": {
+		"message": "보호 활성화됨"
+	},
+	"extStatusEnabled": {
+		"message": "🛡️ 활성화됨"
+	},
+	"extStatusDisabled": {
+		"message": "🛡️ 비활성화됨"
+	},
+	"rmConfirmBtn": {
+		"message": "⚠️ 확인하려면 다시 클릭하세요!"
+	},
+	"rmAllBtn": {
+		"message": "모든 키워드 삭제"
+	},
+	"inputPlaceholder": {
+		"message": "키워드 또는 문구..."
+	},
+	"addBtn": {
+		"message": "추가"
+	},
+	"errMsgInList": {
+		"message": "이미 목록에 있습니다!"
+	},
+	"footer": {
+		"message": "스포일러 및 클릭베이트 차단"
+	}
+}
+

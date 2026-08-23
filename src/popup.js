@@ -10,6 +10,28 @@ let isEnabled = true;
 let clearConfirmActive = false;
 let clearTimer = null;
 
+function localizeHtml() {
+  const elements = document.querySelectorAll('[data-i18n]');
+
+  elements.forEach(element => {
+	const key = element.getAttribute('data-i18n');
+	const message = chrome.i18n.getMessage(key);
+	if (message) {
+	  element.textContent = message;
+	}
+  });
+
+  const inputElements = document.querySelectorAll('[data-i18n-placeholder]');
+
+  inputElements.forEach(element => {
+	  const key = element.getAttribute('data-i18n-placeholder');
+	  const message = chrome.i18n.getMessage(key);
+	  if (message) {
+		  element.placeholder = message;
+	  }
+  });
+}
+
 function showError() {
   errorMsg.classList.add('show');
   setTimeout(() => errorMsg.classList.remove('show'), 2000);
@@ -18,19 +40,45 @@ function showError() {
 function renderList(keywords) {
   listContainer.innerHTML = '';
   if (keywords.length === 0) {
-    listContainer.innerHTML = '<div class="empty-msg">No keywords added yet.<br>Add words to hide spoilers & clickbait.</div>';
+    const emptyMsg = document.createElement('div');
+	  emptyMsg.className = 'empty-msg';
+
+	  const top = document.createElement('div');
+	  top.className = 'empty-top';
+	  top.textContent = chrome.i18n.getMessage("popupEmptyMsgTop");
+
+	  const bottom = document.createElement('div');
+	  bottom.className = 'empty-bottom';
+	  bottom.textContent = chrome.i18n.getMessage("popupEmptyMsgBottom");
+
+	  emptyMsg.appendChild(top);
+	  emptyMsg.appendChild(bottom);
+
+	  listContainer.appendChild(emptyMsg);
     return;
   }
+
+  const fragment = document.createDocumentFragment();
 
   keywords.forEach((word, index) => {
     const item = document.createElement('div');
     item.className = 'keyword-item';
-    item.innerHTML = `
-      <span>${word}</span>
-      <button class="delete-btn" data-index="${index}" title="Remove">X</button>
-    `;
-    listContainer.appendChild(item);
+
+	const span = document.createElement('span');
+	span.textContent = word;
+
+	const button = document.createElement('button');
+	button.className = 'delete-btn';
+	button.dataset.index = index;
+	button.title = chrome.i18n.getMessage("rmBtn");
+	button.textContent = 'X';
+
+    item.appendChild(span);
+	item.appendChild(button);
+	fragment.appendChild(item);
   });
+	
+    listContainer.appendChild(fragment);
 }
 
 function loadSettings() {
@@ -41,19 +89,19 @@ function loadSettings() {
     
     const manifest = chrome.runtime.getManifest();
     if (versionFooter) {
-      versionFooter.textContent = `v${manifest.version} • Protection Active`;
+      versionFooter.textContent = `v${manifest.version} • ${chrome.i18n.getMessage("inscBelow")}`;
     }
   });
 }
 
 function updateToggleButton() {
   if (isEnabled) {
-    toggleBtn.textContent = '🛡️ ENABLED';
+    toggleBtn.textContent = chrome.i18n.getMessage("extStatusEnabled");
     toggleBtn.style.backgroundColor = 'rgba(62, 166, 255, 0.15)';
     toggleBtn.style.color = '#3ea6ff';
     toggleBtn.style.border = '1px solid #3ea6ff';
   } else {
-    toggleBtn.textContent = '🛡️ DISABLED';
+    toggleBtn.textContent = chrome.i18n.getMessage("extStatusDisabled");
     toggleBtn.style.backgroundColor = 'rgba(255, 42, 95, 0.15)';
     toggleBtn.style.color = '#ff2a5f';
     toggleBtn.style.border = '1px solid #ff2a5f';
@@ -118,18 +166,18 @@ listContainer.addEventListener('click', (e) => {
 clearBtn.addEventListener('click', () => {
   if (!clearConfirmActive) {
     clearConfirmActive = true;
-    clearBtn.textContent = '⚠️ Click again to confirm!';
+    clearBtn.textContent = chrome.i18n.getMessage("rmConfirmBtn");
     clearBtn.style.backgroundColor = 'rgba(237, 28, 36, 0.1)';
     
     clearTimer = setTimeout(() => {
       clearConfirmActive = false;
-      clearBtn.textContent = 'Clear All Keywords';
+      clearBtn.textContent = chrome.i18n.getMessage("rmAllBtn");
       clearBtn.style.backgroundColor = 'transparent';
     }, 3000);
   } else {
     clearTimeout(clearTimer);
     clearConfirmActive = false;
-    clearBtn.textContent = 'Clear All Keywords';
+    clearBtn.textContent = chrome.i18n.getMessage("rmAllBtn");
     clearBtn.style.backgroundColor = 'transparent';
     
     chrome.storage.local.set({ blockedKeywords: [] }, () => {
@@ -139,5 +187,11 @@ clearBtn.addEventListener('click', () => {
   }
 });
 
-loadSettings();
+function initializePopup() {
+  localizeHtml();
+
+  loadSettings();
+}
+
+document.addEventListener('DOMContentLoaded', initializePopup);
 

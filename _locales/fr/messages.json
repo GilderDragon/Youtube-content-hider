@@ -1,0 +1,45 @@
+{
+	"extName": {
+		"message": "SpoilerBlock pour YouTube"
+	},
+	"extDescription": {
+		"message": "Masque automatiquement les vidéos YouTube contenant des mots-clés spécifiés. Remplace le clickbait et les spoilers par des espaces réservés stylisés."
+	},
+	"popupEmptyMsgTop": {
+		"message": "Aucun mot-clé ajouté pour ocmmencer"
+	},
+	"popupEmptyMsgBottom": {
+		"message": "Ajoutez des mots pour masquer les spoilers et le clickbait"
+	},
+	"rmBtn": {
+		"message": "Supprimer"
+	},
+	"inscBelow": {
+		"message": "Protection active"
+	},
+	"extStatusEnabled": {
+		"message": "🛡️ ACTIVÉ"
+	},
+	"extStatusDisabled": {
+		"message": "🛡️ DÉSACTIVÉ"
+	},
+	"rmConfirmBtn": {
+		"message": "⚠️ Cliquez à nouveau pour confirmer !"
+	},
+	"rmAllBtn": {
+		"message": "Effacer tous les mots-clés"
+	},
+	"inputPlaceholder": {
+		"message": "Mot-clé ou phrase..."
+	},
+	"addBtn": {
+		"message": "Ajouter"
+	},
+	"errMsgInList": {
+		"message": "Déjà dans la liste !"
+	},
+	"footer": {
+		"message": "Bloque les spoilers et le clickbait"
+	}
+}
+

@@ -1,0 +1,45 @@
+{
+	"extName": {
+		"message": "SpoilerBlock para YouTube"
+	},
+	"extDescription": {
+		"message": "Oculta automáticamente los videos de YouTube que contienen palabras clave específicas. Reemplaza el clickbait y los spoilers con marcadores de posición estilizados."
+	},
+	"popupEmptyMsgTop": {
+		"message": "Aún no se han añadido palabras clave"
+	},
+	"popupEmptyMsgBottom": {
+		"message": "Añada palabras para ocultar spoilers y clickbait"
+	},
+	"rmBtn": {
+		"message": "Eliminar"
+	},
+	"inscBelow": {
+		"message": "Protección activa"
+	},
+	"extStatusEnabled": {
+		"message": "🛡️ ACTIVADO"
+	},
+	"extStatusDisabled": {
+		"message": "🛡️ DESACTIVADO"
+	},
+	"rmConfirmBtn": {
+		"message": "⚠️ ¡Haga clic de nuevo para confirmar!"
+	},
+	"rmAllBtn": {
+		"message": "Borrar todas las palabras clave"
+	},
+	"inputPlaceholder": {
+		"message": "Palabra clave o frase..."
+	},
+	"addBtn": {
+		"message": "Añadir"
+	},
+	"errMsgInList": {
+		"message": "¡Ya está en la lista!"
+	},
+	"footer": {
+		"message": "Bloquea spoilers y clickbait"
+	}
+}
+

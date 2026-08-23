@@ -177,20 +177,20 @@
     <h2>SpoilerBlock</h2>
   </div>
   
-  <button id="toggle-btn" class="toggle-btn">Disable Extension</button>
+  <button id="toggle-btn" class="toggle-btn"></button>
   
   <div class="input-group">
-    <input type="text" id="keyword-input" placeholder="Keyword or phrase..." autocomplete="off">
-    <button id="add-btn" class="btn-add">Add</button>
+    <input type="text" id="keyword-input" data-i18n-placeholder="inputPlaceholder" autocomplete="off">
+    <button id="add-btn" class="btn-add" data-i18n="addBtn"></button>
   </div>
 
-  <div id="error-message" class="error-toast">Already in the list!</div>
+  <div id="error-message" class="error-toast" data-i18n="errMsgInList"></div>
 
-  <button id="clear-btn" class="btn-clear">Clear All Keywords</button>
+  <button id="clear-btn" class="btn-clear" data-i18n="rmAllBtn"></button>
 
   <div class="keyword-list" id="keyword-list"></div>
 
-  <div class="footer" id="version-footer">Blocks spoilers & clickbait</div>
+  <div class="footer" id="version-footer" data-i18n="footer"></div>
 
   <script src="popup.js"></script>
 </body>
