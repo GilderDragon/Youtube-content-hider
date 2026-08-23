@@ -27,7 +27,7 @@ function renderList(keywords) {
     item.className = 'keyword-item';
     item.innerHTML = `
       <span>${word}</span>
-      <button class="delete-btn" data-index="${index}" title="Remove">✕</button>
+      <button class="delete-btn" data-index="${index}" title="Remove">X</button>
     `;
     listContainer.appendChild(item);
   });
