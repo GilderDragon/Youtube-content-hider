@@ -4,7 +4,7 @@
 		"description": "Extension name"
 	},
 	"extDescription": {
-		"message": "Automaticly hides YouTube videos containing specified keywords. Replace clickbait and spoilers with stylized placeholders.",
+		"message": "Automatically hides YouTube previews containing specified keywords. Replace clickbait and spoilers with stylized placeholders.",
 		"description": "Extension description"
 	},
 	"popupEmptyMsgTop": {

@@ -3,7 +3,7 @@
 		"message": "SpoilerBlock para YouTube"
 	},
 	"extDescription": {
-		"message": "Oculta automáticamente los videos de YouTube que contienen palabras clave específicas. Reemplaza el clickbait y los spoilers con marcadores de posición estilizados."
+		"message": "Oculta automáticamente las vistas previas de YouTube que contienen palabras clave específicas. Reemplaza el clickbait y los spoilers con marcadores de posición estilizados."
 	},
 	"popupEmptyMsgTop": {
 		"message": "Aún no se han añadido palabras clave"

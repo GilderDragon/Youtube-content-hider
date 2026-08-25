@@ -3,7 +3,7 @@
 		"message": "SpoilerBlock für YouTube"
 	},
 	"extDescription": {
-		"message": "Blendet YouTube-Videos, die bestimmte Schlüsselwörter enthalten, automatisch aus. Ersetzt Clickbait und Spoiler durchstilisierte Platzhalter."
+		"message": "Automatisiertes Ausblenden von YouTube-Vorschauen, die bestimmte Schlüsselwörter enthalten. Ersetzt Clickbait und Spoiler durch stilisierte Platzhalter."
 	},
 	"popupEmptyMsgTop": {
 		"message": "Noch keine Schlüsselwörter hinzugefügt"

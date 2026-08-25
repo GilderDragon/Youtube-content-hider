@@ -3,7 +3,7 @@
 		"message": "SpoilerBlock para YouTube"
 	},
 	"extDescription": {
-		"message": "Oculta automaticamente vídeos do YouTube que contêm palavras-chave especificadas. Substitui clickbait e spoilers por marcadores de posição estilizados."
+		"message": "Oculta automaticamente as prévias do YouTube que contêm palavras-chave especificadas. Substitui clickbait e spoilers por marcadores de posição estilizados."
 	},
 	"popupEmptyMsgTop": {
 		"message": "Nenhuma palavra-chave adicionada ainda"

@@ -3,7 +3,7 @@
 		"message": "SpoilerBlock pour YouTube"
 	},
 	"extDescription": {
-		"message": "Masque automatiquement les vidéos YouTube contenant des mots-clés spécifiés. Remplace le clickbait et les spoilers par des espaces réservés stylisés."
+		"message": "Masque automatiquement les aperçus YouTube contenant des mots-clés spécifiés. Remplace le clickbait et les spoilers par des espaces réservés stylisés."
 	},
 	"popupEmptyMsgTop": {
 		"message": "Aucun mot-clé ajouté pour ocmmencer"
