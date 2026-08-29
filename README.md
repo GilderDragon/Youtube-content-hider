@@ -1,4 +1,4 @@
-# YouTube Spoiler Block
+# [YouTube Spoiler Block](https://chromewebstore.google.com/detail/spoilerblock-for-youtube/ahkalndkandcbbfglobfnhcbleimpedm?authuser=0&hl=en)
 
 > Hide YouTube videos that contain unwanted keywords – take back control of your feed.
 
